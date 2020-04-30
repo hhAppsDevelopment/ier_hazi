@@ -40,11 +40,11 @@ public class ControlPanel extends JPanel {
     }
 
     private void stop(ActionEvent actionEvent) {
-        //TODO
+        QuarantineLogger.log("Not yet implemented!");
     }
 
     private void start(ActionEvent actionEvent) {
-        //TODO
+        QuarantineLogger.log("Not yet implemented!");
     }
 
     private void browse(ActionEvent actionEvent) {
