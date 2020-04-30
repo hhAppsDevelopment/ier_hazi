@@ -1,18 +1,20 @@
 package view;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 
 public class ControlPanel extends JPanel {
+    private final PlayField playField;
     private JLabel lFileName;
     private JTextField fileName;
     private JButton browse;
     private JButton load;
     private JButton start;
     private JButton stop;
-    public ControlPanel() {
+    public ControlPanel(PlayField playField) {
+        this.playField = playField;
         lFileName = new JLabel("File: ");
         this.add(lFileName);
 
@@ -54,6 +56,10 @@ public class ControlPanel extends JPanel {
     }
 
     private void load(ActionEvent actionEvent) {
-        //TODO
+        try {
+            playField.loadFile(new File(fileName.getText()));
+        } catch (IOException e) {
+            QuarantineLogger.log(e.toString());
+        }
     }
 }

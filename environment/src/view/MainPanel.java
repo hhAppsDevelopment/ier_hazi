@@ -11,8 +11,9 @@ public class MainPanel extends JPanel {
 
     public MainPanel() {
         this.setLayout(new BorderLayout());
-        this.add(controlPanel = new ControlPanel(), BorderLayout.PAGE_START);
-        this.add(playField = new PlayField(), BorderLayout.CENTER);
+        playField = new PlayField();
+        this.add(controlPanel = new ControlPanel(playField), BorderLayout.PAGE_START);
+        this.add(playField, BorderLayout.CENTER);
         logText = new JTextArea();
         logText.setColumns(30);
         logText.setEditable(false);
