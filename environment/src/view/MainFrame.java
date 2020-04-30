@@ -12,6 +12,8 @@ public class MainFrame extends JFrame {
         this.setSize(width, height);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(screenSize.width / 2 - width/2, screenSize.height / 2 - height/2);
+        this.setTitle(title);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setContentPane(new MainPanel());
     }
 }
