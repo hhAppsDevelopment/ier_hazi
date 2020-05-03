@@ -1,5 +1,6 @@
 package occupants;
 
+import model.Cabin;
 import model.TileGraph;
 import view.Tile;
 
@@ -26,5 +27,13 @@ public class FoodTransporter extends Agent {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void leaveFood() {
+        if(currentTile.getPremise() instanceof Cabin) currentTile.getPremise().getTiles().forEach(tile -> tile.getOccupants().forEach(Occupant::resetFood));
+    }
+
+    private void leaveMedicine() {
+        if(currentTile.getPremise() instanceof Cabin) currentTile.getPremise().getTiles().forEach(tile -> tile.getOccupants().forEach(Occupant::giveMedicine));
     }
 }

@@ -20,23 +20,29 @@ public class Person extends Occupant {
     private double goSmokeChance;
     private double redLampModifier;
     private double coughingChance;
+    private double recoveryChance;
+    private int food;
     private static final double moveChanceMax = 0.5;
     private static final double goOutChanceMax = 0.05;
     private static final double goInChanceMax = 0.05;
     private static final double goSmokeChanceMax = 0.1;
-    private static final double redLampModifierMax = 0.5;
+    private static final double redLampModifierMax = 0.1;
     private static final double coughingChanceMax = 0.25;
+    private static final double recoveryChanceMax = 0.2;
+    private static final double recoveryChanceMin = 0.1;
     private static final double coughingChanceMin = 0.1;
     private static final double moveChanceMin = 0.4;
     private static final double goOutChanceMin = 0.01;
     private static final double goInChanceMin = 0.01;
     private static final double goSmokeChanceMin = 0.05;
-    private static final double redLampModifierMin = 0.1;
+    private static final double redLampModifierMin = 0.01;
     private static final double smokerChance = 0.25;
     private static final int asymptomaticMin = 100;
     private static final int asymptomaticMax = 150;
     private static final int symptomaticMin = 50;
     private static final int symptomaticMax = 100;
+    private static final int foodMin = 25;
+    private static final int foodMax = 100;
 
     public void setContagious() {
         contagious = true;
@@ -75,6 +81,8 @@ public class Person extends Occupant {
         goSmokeChance = (Math.random() <= smokerChance) ? goSmokeChanceMin + Math.random() * (goSmokeChanceMax - goSmokeChanceMin) : 0;
         redLampModifier = redLampModifierMin + Math.random() * (redLampModifierMax - redLampModifierMin);
         coughingChance = coughingChanceMin + Math.random() * (coughingChanceMax - coughingChanceMin);
+        recoveryChance = recoveryChanceMin + Math.random() * (recoveryChanceMax - recoveryChanceMin);
+        food = (int) (foodMin + Math.random() * (foodMax - foodMin));
 
     }
 
@@ -91,6 +99,16 @@ public class Person extends Occupant {
         return Math.random() <= Math.pow(redLampModifier, redLamps[0]);
     }
 
+    public void resetFood() {
+        food = (int) (foodMin + Math.random() * (foodMax - foodMin));
+    }
+
+    public void giveMedicine() {
+        if(state == ILLNESS_STATE.ILL_ASYMPTOMATIC || state == ILLNESS_STATE.ILL_SYMPTOMATIC) {
+            recoveryChance *= 1.1;
+        }
+    }
+
     @Override
     public void step() {
         if(state == ILLNESS_STATE.DEAD) {
@@ -98,6 +116,13 @@ public class Person extends Occupant {
             return;
         }
         super.step();
+
+        if(food == 1) {
+            movingModifier*=1.2;
+            food = 0;
+        }
+        else if(food > 1) --food;
+
         if(remainingTime == 1) {
             switch(state) {
                 case ILL_ASYMPTOMATIC:
@@ -106,15 +131,24 @@ public class Person extends Occupant {
                     movingModifier *= 0.25;
                     break;
                 case ILL_SYMPTOMATIC:
-                    state = ILLNESS_STATE.DEAD;
-                    baseColor = Color.BLACK;
-                    for (Tile t : currentTile.getPremise().getTiles()) {
-                        for (Occupant o : t.getOccupants()) {
-                            o.notifyDead(this);
-                        }
+                    if(Math.random() <= recoveryChance){
+                        state = ILLNESS_STATE.HEALTHY;
+                        remainingTime = 0;
+                        contagious = false;
+                        baseColor = Color.BLUE;
+                        recovered();
                     }
-                    remainingTime = 0;
-                    movingModifier = 0;
+                    else {
+                        state = ILLNESS_STATE.DEAD;
+                        baseColor = Color.BLACK;
+                        for (Tile t : currentTile.getPremise().getTiles()) {
+                            for (Occupant o : t.getOccupants()) {
+                                o.notifyDead(this);
+                            }
+                        }
+                        remainingTime = 0;
+                        movingModifier = 0;
+                    }
                     break;
             }
         }
@@ -148,7 +182,7 @@ public class Person extends Occupant {
                     setGoal(tileGraph.getRandomPremise(tileGraph.getCabins()).getRandomTile(), this::redLampCalc);
                 }
             }
-            else if((rnd-=goInChance*movingModifier) <= goSmokeChance*movingModifier) {
+            else if(rnd - (goInChance * movingModifier) <= goSmokeChance*movingModifier) {
                 if(currentTile.getPremise() instanceof Cabin || currentTile.getPremise() instanceof Corridor) {
                     setGoal(tileGraph.getRandomPremise(tileGraph.getSmokingRooms()).getRandomTile(), this::redLampCalc);
                 }
@@ -166,5 +200,10 @@ public class Person extends Occupant {
                 movingModifier *= 0.5;
             }
         }
+    }
+
+    @Override
+    protected boolean isDead() {
+        return state == ILLNESS_STATE.DEAD;
     }
 }

@@ -15,6 +15,10 @@ public abstract class Occupant {
     protected boolean contagious = false;
     private double contagionChance = 0.1;
 
+    protected void recovered() {
+        contagionChance *= 0.5;
+    }
+
     public Color getBaseColor() {
         return baseColor;
     }
@@ -43,20 +47,19 @@ public abstract class Occupant {
         currentTile.unregisterOccupant(this);
         to.registerOccupant(this);
         currentTile = to;
-        for(Tile t : currentTile.getPremise().getTiles()){
-            for(Occupant o : t.getOccupants()) {
+        for (Tile t : currentTile.getPremise().getTiles()) {
+            for (Occupant o : t.getOccupants()) {
                 o.notifyMoved(this);
             }
         }
-        if(contagious) {
+        if (contagious) {
             for (Tile t : currentTile.getPremise().getTiles()) {
                 for (Occupant o : t.getOccupants()) {
                     o.notifyContagious(currentTile);
                 }
             }
             currentTile.getPremise().addContagious(currentTile);
-        }
-        else {
+        } else {
             for (Tile t : currentTile.getPremise().getContagious()) {
                 notifyContagious(t);
             }
@@ -64,29 +67,26 @@ public abstract class Occupant {
     }
 
 
-
     protected void notifyContagious(Tile contTile) {
-        int size = dijkstraShortestPath.getPath(currentTile, contTile).getVertexList().size();
-        if(Math.random() <= Math.pow(contagionChance, size)) this.contagious = true;
+        int size = (int) dijkstraShortestPath.getPath(currentTile, contTile).getWeight();
+        if (Math.random() <= Math.pow(contagionChance, size)) this.contagious = true;
     }
 
     public void step() {
-        if(goal == null) return;
-        if(remaining == 1) {
+        if (goal == null) return;
+        if (remaining == 1) {
             moveSelf(next);
             pathToGoal.remove(currentTile);
-            if(pathToGoal.size() == 0) {
+            if (pathToGoal.size() == 0) {
                 this.goal = null;
                 next = null;
                 pathToGoal = null;
                 remaining = 0;
-            }
-            else {
+            } else {
                 next = pathToGoal.get(0);
                 remaining = (int) graph.getEdgeWeight(graph.getEdge(currentTile, next));
             }
-        }
-        else --remaining;
+        } else --remaining;
     }
 
     protected void setGoal(Tile goal) {
@@ -94,17 +94,16 @@ public abstract class Occupant {
     }
 
     protected void setGoal(Tile goal, Predicate<List<Tile>> predicate) {
-        if(currentTile.equals(goal)) {
+        if (currentTile.equals(goal)) {
             this.goal = null;
             next = null;
             pathToGoal = null;
             remaining = 0;
-        }
-        else {
+        } else {
             this.goal = goal;
             GraphPath<Tile, DefaultWeightedEdge> path = dijkstraShortestPath.getPath(currentTile, goal);
             pathToGoal = path.getVertexList();
-            if(predicate.test(pathToGoal)) {
+            if (predicate.test(pathToGoal)) {
                 pathToGoal.remove(currentTile);
                 next = pathToGoal.get(0);
                 remaining = (int) graph.getEdgeWeight(graph.getEdge(currentTile, next));
@@ -128,5 +127,15 @@ public abstract class Occupant {
     }
 
     protected void notifyDead(Person person) {
+    }
+
+    public void resetFood() {
+    }
+
+    public void giveMedicine() {
+    }
+
+    protected boolean isDead() {
+        return false;
     }
 }

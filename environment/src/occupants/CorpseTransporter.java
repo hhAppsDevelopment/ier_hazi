@@ -29,4 +29,10 @@ public class CorpseTransporter extends Agent {
             }
         }
     }
+
+    private void clearCorpse() {
+        currentTile.getOccupants().forEach(occupant -> {
+            if(occupant.isDead()) currentTile.unregisterOccupant(occupant);
+        });
+    }
 }

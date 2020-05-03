@@ -41,4 +41,12 @@ public class Camera extends Agent {
     protected void notifyDead(Person person) {
         QuarantineLogger.log("A person has died");
     }
+
+    private void endQuarantine() {
+        QuarantineLogger.log("Quarantine has ended!");
+    }
+
+    private void setRedLamp(boolean state) {
+        currentTile.getPremise().setLocked(state);
+    }
 }

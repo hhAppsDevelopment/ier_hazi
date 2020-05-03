@@ -28,4 +28,8 @@ public class Cleaner extends Agent {
             }
         }
     }
+
+    private void cleanCurrentRoom() {
+        currentTile.getPremise().getContagious().clear();
+    }
 }
