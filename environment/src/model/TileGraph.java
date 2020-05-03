@@ -21,18 +21,36 @@ public class TileGraph {
     private static final int SMOKING_DOOR_WEIGHT = 12;
     private static final int CORRIDOR_DOOR_WEIGHT = 11;
 
+    public ArrayList<Cabin> getCabins() {
+        return cabins;
+    }
+
+    public ArrayList<SmokingRoom> getSmokingRooms() {
+        return smokingRooms;
+    }
+
+    public ArrayList<Corridor> getCorridors() {
+        return corridors;
+    }
+
     private ArrayList<Cabin> cabins;
     private ArrayList<SmokingRoom> smokingRooms;
     private ArrayList<Corridor> corridors;
 
     private DijkstraShortestPath<Tile, DefaultWeightedEdge> dijkstraShortestPath;
 
+    public SimpleWeightedGraph<Tile, DefaultWeightedEdge> getGraph() {
+        return graph;
+    }
+
+    private SimpleWeightedGraph<Tile, DefaultWeightedEdge> graph;
+
     public void init(Color[][] colors, Tile[][] panels, int rows, int cols) {
         boolean[][] processed = new boolean[rows][cols];
         cabins = new ArrayList<>();
         smokingRooms = new ArrayList<>();
         corridors = new ArrayList<>();
-        SimpleWeightedGraph<Tile, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+        graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
 
         for(int i = 0; i < rows; ++i) {
             for(int j = 0; j < cols; ++j) {

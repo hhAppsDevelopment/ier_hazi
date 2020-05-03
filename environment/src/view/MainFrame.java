@@ -7,7 +7,6 @@ public class MainFrame extends JFrame {
     private static final int width = 1280;
     private static final int height = 720;
     private static final String title = "Automatic Quarantine System Simulation";
-    private MainPanel mainPanel;
 
     public MainFrame() {
         this.setSize(width, height);
@@ -15,8 +14,10 @@ public class MainFrame extends JFrame {
         this.setLocation(screenSize.width / 2 - width/2, screenSize.height / 2 - height/2);
         this.setTitle(title);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        MainPanel mainPanel;
         this.setContentPane(mainPanel = new MainPanel());
         this.setResizable(false);
         QuarantineLogger.setMainPanel(mainPanel);
     }
+
 }

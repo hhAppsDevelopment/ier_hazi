@@ -1,20 +1,28 @@
 package view;
 
-import occupants.Agent;
+import model.Premise;
 import model.TileGraph;
+import occupants.Agent;
+import occupants.Person;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PlayField extends JPanel {
     private ArrayList<Agent> agents;
+    private ArrayList<Person> people;
 
     private TileGraph tileGraph;
 
     public PlayField() {
         this.setLayout(null);
+        agents = new ArrayList<>();
+        people = new ArrayList<>();
     }
 
     public void loadFile(File file) throws IOException {
@@ -39,7 +47,7 @@ public class PlayField extends JPanel {
         for(int i = 0; i < rows; ++i) {
             y = i*constraining;
             for(int j = 0; j < cols; ++j) {
-                tiles[i][j] = new Tile(tileGraph);
+                tiles[i][j] = new Tile();
                 tiles[i][j].setSize(constraining, constraining);
                 x = j*constraining;
                 tiles[i][j].setLocation(x, y);
@@ -49,6 +57,12 @@ public class PlayField extends JPanel {
             }
         }
         tileGraph.init(colors, tiles, rows, cols);
+
+        for(Premise p : tileGraph.getCabins()) {
+            Person person = new Person(tileGraph, p.getTiles().get(0));
+            people.add(person);
+            p.getTiles().get(0).registerOccupant(person);
+        }
 
         this.repaint();
     }
@@ -75,5 +89,11 @@ public class PlayField extends JPanel {
 
     public TileGraph getTileGraph() {
         return tileGraph;
+    }
+
+    public void step() {
+        agents.forEach(Agent::step);
+        people.forEach(Person::step);
+        this.repaint();
     }
 }

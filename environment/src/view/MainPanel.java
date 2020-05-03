@@ -25,4 +25,5 @@ public class MainPanel extends JPanel {
      void append(String msg) {
         logText.append("\r\n" + msg);
     }
+
 }

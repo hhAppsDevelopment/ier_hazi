@@ -39,12 +39,29 @@ public class ControlPanel extends JPanel {
         this.add(stop);
     }
 
+    private volatile boolean flag;
+
     private void stop(ActionEvent actionEvent) {
-        QuarantineLogger.log("Not yet implemented!");
+        flag = false;
     }
 
     private void start(ActionEvent actionEvent) {
-        QuarantineLogger.log("Not yet implemented!");
+        if(!flag) {
+            flag = true;
+            Thread thread = new Thread(() -> {
+                while (flag) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    playField.step();
+                }
+            });
+            thread.start();
+        }
+
+
     }
 
     private void browse(ActionEvent actionEvent) {

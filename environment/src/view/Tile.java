@@ -1,75 +1,37 @@
 package view;
 
-import model.TileGraph;
 import occupants.Occupant;
-import org.jgrapht.GraphPath;
-import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultWeightedEdge;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.List;
 
-public class Tile extends JPanel implements MouseListener {
+public class Tile extends JPanel {
     private ArrayList<Occupant> occupants;
-    private final TileGraph tileGraph;
 
-    public Tile(TileGraph tileGraph) {
-        this.tileGraph = tileGraph;
-        this.addMouseListener(this);
+    public Tile(){
+        occupants = new ArrayList<>();
     }
 
-    private static Tile first = null;
-    private static List<Tile> list = new ArrayList<>();
+    public void registerOccupant(Occupant o) {
+        occupants.add(o);
+    }
+
+    public void unregisterOccupant(Occupant o) {
+        occupants.remove(o);
+    }
 
     @Override
-    public void mouseClicked(MouseEvent mouseEvent) {
-        if(first == null) {
-            first = this;
-            for(Tile t : list) {
-                t.removeAll();
-                t.repaint();
-            }
-        } else {
-            QuarantineLogger.log("Shortest path: " + calcShortestPath(first, this));
-            for(Tile t : list) {
-                JLabel label = new JLabel("X");
-                label.setSize(t.getWidth(), t.getHeight());
-                label.setForeground(Color.BLUE);
-                t.add(label);
-                t.repaint();
-            }
-            first = null;
+    protected void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
+        for (int i = 0, occupantsSize = occupants.size(); i < occupantsSize; i++) {
+            Occupant o = occupants.get(i); // drawing on top of each other
+            graphics.setColor(o.getBaseColor());
+            graphics.fillOval(getWidth() / 10, getHeight() / 10, (getWidth() * 8) / 10, (getHeight() * 8) / 10);
+            Image drawing = o.getDrawing();
+            graphics.drawImage(drawing, getWidth() * 2 / 10, getHeight() * 2 / 10, null);
         }
-    }
-
-    private int calcShortestPath(Tile first, Tile second) {
-        DijkstraShortestPath<Tile, DefaultWeightedEdge> dijkstraShortestPath = tileGraph.getDijkstraShortestPath();
-        GraphPath<Tile, DefaultWeightedEdge> graphPath = dijkstraShortestPath.getPath(first, second);
-        list = graphPath.getVertexList();
-        return (int) graphPath.getWeight();
-    }
-
-    @Override
-    public void mousePressed(MouseEvent mouseEvent) {
 
     }
 
-    @Override
-    public void mouseReleased(MouseEvent mouseEvent) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent mouseEvent) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent mouseEvent) {
-
-    }
 }
