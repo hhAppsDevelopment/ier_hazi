@@ -3,9 +3,12 @@ package occupants;
 import model.TileGraph;
 import view.Tile;
 
-public class Agent extends Occupant {
-    protected Agent(TileGraph tileGraph, Tile currentTile) {
+import java.awt.*;
+
+public abstract class Agent extends Occupant {
+    public Agent(TileGraph tileGraph, Tile currentTile) {
         super(tileGraph, currentTile);
+        baseColor = Color.WHITE;
     }
 
     @Override

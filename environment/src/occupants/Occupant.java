@@ -5,7 +5,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import view.QuarantineLogger;
 import view.Tile;
 
 import java.awt.*;
@@ -17,13 +16,10 @@ public abstract class Occupant {
         return baseColor;
     }
 
-    public Image getDrawing() {
-        return drawing;
-    }
+    public abstract Image getDrawing();
 
     protected Tile currentTile;
     protected Color baseColor;
-    protected Image drawing;
     protected TileGraph tileGraph;
     private Graph<Tile, DefaultWeightedEdge> graph;
     private DijkstraShortestPath<Tile, DefaultWeightedEdge> dijkstraShortestPath;

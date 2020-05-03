@@ -2,8 +2,7 @@ package view;
 
 import model.Premise;
 import model.TileGraph;
-import occupants.Agent;
-import occupants.Person;
+import occupants.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class PlayField extends JPanel {
+    private static final int CLEANER_NUM = 3;
+    private static final int FOOD_TRANSPORTER_NUM = 5;
+    private static final int CORPSE_TRANSPORTER_NUM = 2;
     private ArrayList<Agent> agents;
     private ArrayList<Person> people;
 
@@ -59,11 +61,48 @@ public class PlayField extends JPanel {
         tileGraph.init(colors, tiles, rows, cols);
 
         for(Premise p : tileGraph.getCabins()) {
-            Person person = new Person(tileGraph, p.getTiles().get(0));
+            Tile cameraTile = p.getTiles().get(0);
+            Tile personTile = p.getRandomTile();
+            Camera camera = new Camera(tileGraph, cameraTile);
+            Person person = new Person(tileGraph, personTile);
             people.add(person);
-            p.getTiles().get(0).registerOccupant(person);
-            if(Math.random() <= 0.5) p.setLocked(true);
+            agents.add(camera);
+            personTile.registerOccupant(person);
+            cameraTile.registerOccupant(camera);
         }
+
+        for(Premise p : tileGraph.getSmokingRooms()) {
+            Tile cameraTile = p.getTiles().get(0);
+            Camera camera = new Camera(tileGraph, cameraTile);
+            agents.add(camera);
+            cameraTile.registerOccupant(camera);
+        }
+
+        for(Premise p : tileGraph.getCorridors()) {
+            Tile cameraTile = p.getTiles().get(0);
+            Camera camera = new Camera(tileGraph, cameraTile);
+            agents.add(camera);
+            cameraTile.registerOccupant(camera);
+            for(int i = 0; i < CLEANER_NUM; ++i) {
+                Tile tile = p.getRandomTile();
+                Agent agent = new Cleaner(tileGraph, tile);
+                agents.add(agent);
+                tile.registerOccupant(agent);
+            }
+            for(int i = 0; i < FOOD_TRANSPORTER_NUM; ++i) {
+                Tile tile = p.getRandomTile();
+                Agent agent = new FoodTransporter(tileGraph, tile);
+                agents.add(agent);
+                tile.registerOccupant(agent);
+            }
+            for(int i = 0; i < CORPSE_TRANSPORTER_NUM; ++i) {
+                Tile tile = p.getRandomTile();
+                Agent agent = new CorpseTransporter(tileGraph, tile);
+                agents.add(agent);
+                tile.registerOccupant(agent);
+            }
+        }
+
 
         this.repaint();
     }

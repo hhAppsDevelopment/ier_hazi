@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-    private static final int width = 1280;
-    private static final int height = 720;
+    private static final int width = 1920;
+    private static final int height = 1080;
     private static final String title = "Automatic Quarantine System Simulation";
 
     public MainFrame() {

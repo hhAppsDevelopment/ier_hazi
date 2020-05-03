@@ -29,7 +29,7 @@ public class Tile extends JPanel {
         super.paintComponent(graphics);
         if(lamp) {
             graphics.setColor(Color.RED);
-            graphics.fillOval(1, 1, getWidth()/2, getHeight()/2);
+            graphics.fillOval(1, 1, getWidth()/3, getHeight()/3);
         }
         for (int i = 0, occupantsSize = occupants.size(); i < occupantsSize; i++) {
             Occupant o = occupants.get(i); // drawing on top of each other
@@ -37,6 +37,13 @@ public class Tile extends JPanel {
             graphics.fillOval(getWidth() / 10, getHeight() / 10, (getWidth() * 8) / 10, (getHeight() * 8) / 10);
             Image drawing = o.getDrawing();
             graphics.drawImage(drawing, getWidth() * 2 / 10, getHeight() * 2 / 10, null);
+        }
+        if(occupants.size() > 1) {
+            graphics.setColor(Color.GRAY);
+            graphics.fillOval(getWidth()*2/3-1, getHeight()*2/3-1, getWidth()/3, getHeight()/3);
+            graphics.setFont(graphics.getFont().deriveFont(getHeight()*0.3f));
+            graphics.setColor(Color.WHITE);
+            graphics.drawString("" + occupants.size(), (int) (getWidth()*2/3 + getWidth()*0.3/4), (int) (getHeight()*0.92f));
         }
 
 

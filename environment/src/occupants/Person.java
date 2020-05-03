@@ -31,13 +31,17 @@ public class Person extends Occupant {
     private static final double redLampModifierMin = 0.1;
     private static final double smokerChance = 0.25;
 
+    private static Image drawing;
+
     public Person(TileGraph tileGraph, Tile currentTile) {
         super(tileGraph, currentTile);
-        File personDrawable = new File("res/person.png");
-        try {
-            drawing = ImageIO.read(personDrawable).getScaledInstance(currentTile.getWidth()*6/10, currentTile.getHeight()*6/10, Image.SCALE_DEFAULT);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(drawing == null) {
+            File personDrawable = new File("res/person.png");
+            try {
+                drawing = ImageIO.read(personDrawable).getScaledInstance(currentTile.getWidth() * 6 / 10, currentTile.getHeight() * 6 / 10, Image.SCALE_SMOOTH);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         baseColor = Color.BLUE;
 
@@ -47,6 +51,11 @@ public class Person extends Occupant {
         goSmokeChance = (Math.random() <= smokerChance) ? goSmokeChanceMin + Math.random() * (goSmokeChanceMax - goSmokeChanceMin) : 0;
         redLampModifier = redLampModifierMin + Math.random() * (redLampModifierMax - redLampModifierMin);
 
+    }
+
+    @Override
+    public Image getDrawing() {
+        return drawing;
     }
 
     private boolean redLampCalc(List<Tile> tileList) {
