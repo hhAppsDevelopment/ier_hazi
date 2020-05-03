@@ -1,6 +1,7 @@
 package occupants;
 
 import model.TileGraph;
+import view.QuarantineLogger;
 import view.Tile;
 
 import javax.imageio.ImageIO;
@@ -25,5 +26,19 @@ public class Camera extends Agent {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    protected void notifyMoved(Occupant occupant) {
+    }
+
+    @Override
+    protected void notifyCoughing(Person person) {
+        QuarantineLogger.log("Coughing seen");
+    }
+
+    @Override
+    protected void notifyDead(Person person) {
+        QuarantineLogger.log("A person has died");
     }
 }

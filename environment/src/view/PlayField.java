@@ -103,6 +103,7 @@ public class PlayField extends JPanel {
             }
         }
 
+        people.get((int) (Math.random()*people.size())).setContagious();
 
         this.repaint();
     }

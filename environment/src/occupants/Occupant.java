@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class Occupant {
+    protected boolean contagious = false;
+    private double contagionChance = 0.1;
+
     public Color getBaseColor() {
         return baseColor;
     }
@@ -40,6 +43,31 @@ public abstract class Occupant {
         currentTile.unregisterOccupant(this);
         to.registerOccupant(this);
         currentTile = to;
+        for(Tile t : currentTile.getPremise().getTiles()){
+            for(Occupant o : t.getOccupants()) {
+                o.notifyMoved(this);
+            }
+        }
+        if(contagious) {
+            for (Tile t : currentTile.getPremise().getTiles()) {
+                for (Occupant o : t.getOccupants()) {
+                    o.notifyContagious(currentTile);
+                }
+            }
+            currentTile.getPremise().addContagious(currentTile);
+        }
+        else {
+            for (Tile t : currentTile.getPremise().getContagious()) {
+                notifyContagious(t);
+            }
+        }
+    }
+
+
+
+    protected void notifyContagious(Tile contTile) {
+        int size = dijkstraShortestPath.getPath(currentTile, contTile).getVertexList().size();
+        if(Math.random() <= Math.pow(contagionChance, size)) this.contagious = true;
     }
 
     public void step() {
@@ -91,5 +119,14 @@ public abstract class Occupant {
 
     protected boolean hasGoal() {
         return goal != null;
+    }
+
+    protected void notifyMoved(Occupant occupant) {
+    }
+
+    protected void notifyCoughing(Person person) {
+    }
+
+    protected void notifyDead(Person person) {
     }
 }

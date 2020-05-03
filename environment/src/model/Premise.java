@@ -4,8 +4,12 @@ import view.Tile;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class Premise {
+
     public ArrayList<Tile> getTiles() {
         return tiles;
     }
@@ -18,9 +22,16 @@ public abstract class Premise {
     private ArrayList<Tile> tiles;
     private ArrayList<Tile> doors;
 
+    public Collection<Tile> getContagious() {
+        return contagious;
+    }
+
+    private Set<Tile> contagious;
+
     public Premise() {
         tiles = new ArrayList<>();
         doors = new ArrayList<>();
+        contagious = new HashSet<>();
     }
 
     public void addTile(Color color, Tile tile) {
@@ -37,5 +48,7 @@ public abstract class Premise {
         }
     }
 
-
+    public void addContagious(Tile currentTile) {
+        contagious.add(currentTile);
+    }
 }
