@@ -51,7 +51,7 @@ public class ControlPanel extends JPanel {
             Thread thread = new Thread(() -> {
                 while (flag) {
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

@@ -1,5 +1,6 @@
 package view;
 
+import model.Premise;
 import occupants.Occupant;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 
 public class Tile extends JPanel {
     private ArrayList<Occupant> occupants;
+    private Premise premise;
 
     public Tile(){
         occupants = new ArrayList<>();
@@ -34,4 +36,11 @@ public class Tile extends JPanel {
 
     }
 
+    public void setPremise(Premise premise) {
+        this.premise = premise;
+    }
+
+    public Premise getPremise() {
+        return premise;
+    }
 }

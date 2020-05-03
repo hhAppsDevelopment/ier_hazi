@@ -5,8 +5,9 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import view.Tile;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TileGraph {
 
@@ -44,6 +45,11 @@ public class TileGraph {
     }
 
     private SimpleWeightedGraph<Tile, DefaultWeightedEdge> graph;
+
+    public Premise getRandomPremise(List<? extends Premise> p) {
+        int i = (int) (Math.random()*p.size());
+        return p.get(i);
+    }
 
     public void init(Color[][] colors, Tile[][] panels, int rows, int cols) {
         boolean[][] processed = new boolean[rows][cols];
@@ -98,7 +104,6 @@ public class TileGraph {
             case 10: return SMOKING_DOOR_WEIGHT;
             case 12: return CORRIDOR_DOOR_WEIGHT;
         }
-        System.out.println("Somethings's fishy: " + color + " " + color1 + " value: " + value);
         return 0;
     }
 
@@ -118,6 +123,7 @@ public class TileGraph {
     private Premise discoverPremise(boolean[][] processed, Color[][] colors, Tile[][] panels, int i, int j, int rows, int cols, Color color, Premise premise) {
         if(!processed[i][j] && colors[i][j].equals(color)) {
             premise.addTile(panels[i][j]);
+            panels[i][j].setPremise(premise);
             processed[i][j] = true;
             if(i > 0)           premise = discoverPremise(processed, colors, panels, i-1, j, rows, cols, color, premise);
             if(j > 0)           premise = discoverPremise(processed, colors, panels, i, j-1, rows, cols, color, premise);

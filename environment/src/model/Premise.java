@@ -9,6 +9,11 @@ public abstract class Premise {
         return tiles;
     }
 
+    public Tile getRandomTile() {
+        int i = (int) (Math.random()*tiles.size());
+        return tiles.get(i);
+    }
+
     private ArrayList<Tile> tiles;
 
     public Premise() {

@@ -2,12 +2,13 @@ package occupants;
 
 import model.TileGraph;
 import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import view.QuarantineLogger;
 import view.Tile;
 
 import java.awt.*;
-import java.util.Collections;
+import java.util.List;
 
 public abstract class Occupant {
     public Color getBaseColor() {
@@ -21,24 +22,20 @@ public abstract class Occupant {
     protected Tile currentTile;
     protected Color baseColor;
     protected Image drawing;
-    private TileGraph tileGraph;
+    protected TileGraph tileGraph;
     private Graph<Tile, DefaultWeightedEdge> graph;
+    private DijkstraShortestPath<Tile, DefaultWeightedEdge> dijkstraShortestPath;
 
     protected Occupant(TileGraph tileGraph, Tile currentTile) {
         this.currentTile = currentTile;
         this.tileGraph = tileGraph;
         this.graph = tileGraph.getGraph();
+        this.dijkstraShortestPath = tileGraph.getDijkstraShortestPath();
     }
 
-    protected Tile getRandomNeighbour() {
-        java.util.List<org.jgrapht.graph.DefaultWeightedEdge> list = new java.util.ArrayList<>(tileGraph.getGraph().edgesOf(currentTile));
-        Collections.shuffle(list);
-        DefaultWeightedEdge edge = list.get(0);
-        if(tileGraph.getGraph().getEdgeSource(edge).equals(currentTile)) return  tileGraph.getGraph().getEdgeTarget(edge);
-        return tileGraph.getGraph().getEdgeSource(edge);
-    }
-
+    private Tile goal;
     private Tile next;
+    private List<Tile> pathToGoal;
     private int remaining = 0;
 
     private void moveSelf(Tile to) {
@@ -48,25 +45,42 @@ public abstract class Occupant {
     }
 
     public void step() {
-        if(next == null) return;
+        if(goal == null) return;
         if(remaining == 1) {
             moveSelf(next);
-            next = null;
+            pathToGoal.remove(currentTile);
+            if(pathToGoal.size() == 0) {
+                this.goal = null;
+                next = null;
+                pathToGoal = null;
+                remaining = 0;
+            }
+            else {
+                next = pathToGoal.get(0);
+                remaining = (int) graph.getEdgeWeight(graph.getEdge(currentTile, next));
+            }
         }
         else --remaining;
     }
 
-    public void setNext(Tile next) {
-        if(graph.containsEdge(currentTile, next)) {
-            this.next = next;
-            remaining = (int) graph.getEdgeWeight(graph.getEdge(currentTile, next));
+    protected void setGoal(Tile goal) {
+        if(currentTile.equals(goal)) {
+            this.goal = null;
+            next = null;
+            pathToGoal = null;
+            remaining = 0;
         }
         else {
-            QuarantineLogger.log("Tile is not adjacent to current one! " + currentTile + " -> " + next);
+            this.goal = goal;
+            GraphPath<Tile, DefaultWeightedEdge> path = dijkstraShortestPath.getPath(currentTile, goal);
+            pathToGoal = path.getVertexList();
+            pathToGoal.remove(currentTile);
+            next = pathToGoal.get(0);
+            remaining = (int) graph.getEdgeWeight(graph.getEdge(currentTile, next));
         }
     }
 
     protected boolean hasGoal() {
-        return next != null;
+        return goal != null;
     }
 }
