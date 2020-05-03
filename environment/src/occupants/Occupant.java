@@ -5,10 +5,12 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
+import view.QuarantineLogger;
 import view.Tile;
 
 import java.awt.*;
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class Occupant {
     public Color getBaseColor() {
@@ -64,6 +66,10 @@ public abstract class Occupant {
     }
 
     protected void setGoal(Tile goal) {
+        setGoal(goal, tiles -> true);
+    }
+
+    protected void setGoal(Tile goal, Predicate<List<Tile>> predicate) {
         if(currentTile.equals(goal)) {
             this.goal = null;
             next = null;
@@ -74,9 +80,16 @@ public abstract class Occupant {
             this.goal = goal;
             GraphPath<Tile, DefaultWeightedEdge> path = dijkstraShortestPath.getPath(currentTile, goal);
             pathToGoal = path.getVertexList();
-            pathToGoal.remove(currentTile);
-            next = pathToGoal.get(0);
-            remaining = (int) graph.getEdgeWeight(graph.getEdge(currentTile, next));
+            if(predicate.test(pathToGoal)) {
+                pathToGoal.remove(currentTile);
+                next = pathToGoal.get(0);
+                remaining = (int) graph.getEdgeWeight(graph.getEdge(currentTile, next));
+            } else {
+                this.goal = null;
+                next = null;
+                pathToGoal = null;
+                remaining = 0;
+            }
         }
     }
 

@@ -62,6 +62,7 @@ public class PlayField extends JPanel {
             Person person = new Person(tileGraph, p.getTiles().get(0));
             people.add(person);
             p.getTiles().get(0).registerOccupant(person);
+            if(Math.random() <= 0.5) p.setLocked(true);
         }
 
         this.repaint();

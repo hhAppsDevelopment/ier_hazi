@@ -74,15 +74,15 @@ public class TileGraph {
                 }
                 if (Color.WHITE.equals(colors[i][j])) {
                     if(!processed[i][j]) {
-                        cabins.add((Cabin) discoverPremise(processed, colors, panels, i, j, rows, cols, Color.WHITE, new Cabin()));
+                        cabins.add((Cabin) discoverPremise(processed, colors, panels, i, j, rows, cols, new Color[]{Color.WHITE, new Color(150, 75, 0)}, new Cabin()));
                     }
                 } else if (Color.RED.equals(colors[i][j])) {
                     if(!processed[i][j]) {
-                        smokingRooms.add((SmokingRoom) discoverPremise(processed, colors, panels, i, j, rows, cols, Color.RED, new SmokingRoom()));
+                        smokingRooms.add((SmokingRoom) discoverPremise(processed, colors, panels, i, j, rows, cols, new Color[]{Color.RED, new Color(150, 75, 0)}, new SmokingRoom()));
                     }
                 } else if (Color.YELLOW.equals(colors[i][j])) {
                     if(!processed[i][j]) {
-                        corridors.add((Corridor) discoverPremise(processed, colors, panels, i, j, rows, cols, Color.YELLOW, new Corridor()));
+                        corridors.add((Corridor) discoverPremise(processed, colors, panels, i, j, rows, cols, new Color[]{Color.YELLOW}, new Corridor()));
                     }
                 }
             }
@@ -120,15 +120,19 @@ public class TileGraph {
         return 0;
     }
 
-    private Premise discoverPremise(boolean[][] processed, Color[][] colors, Tile[][] panels, int i, int j, int rows, int cols, Color color, Premise premise) {
-        if(!processed[i][j] && colors[i][j].equals(color)) {
-            premise.addTile(panels[i][j]);
-            panels[i][j].setPremise(premise);
-            processed[i][j] = true;
-            if(i > 0)           premise = discoverPremise(processed, colors, panels, i-1, j, rows, cols, color, premise);
-            if(j > 0)           premise = discoverPremise(processed, colors, panels, i, j-1, rows, cols, color, premise);
-            if(i < rows - 1)    premise = discoverPremise(processed, colors, panels, i+1, j, rows, cols, color, premise);
-            if(j < cols - 1)    premise = discoverPremise(processed, colors, panels, i, j+1, rows, cols, color, premise);
+    private Premise discoverPremise(boolean[][] processed, Color[][] colors, Tile[][] panels, int i, int j, int rows, int cols, Color[] matchingColors, Premise premise) {
+        for(Color color : matchingColors) {
+            if (!processed[i][j] && colors[i][j].equals(color)) {
+                premise.addTile(color, panels[i][j]);
+                panels[i][j].setPremise(premise);
+                processed[i][j] = true;
+                if (i > 0) premise = discoverPremise(processed, colors, panels, i - 1, j, rows, cols, matchingColors, premise);
+                if (j > 0) premise = discoverPremise(processed, colors, panels, i, j - 1, rows, cols, matchingColors, premise);
+                if (i < rows - 1)
+                    premise = discoverPremise(processed, colors, panels, i + 1, j, rows, cols, matchingColors, premise);
+                if (j < cols - 1)
+                    premise = discoverPremise(processed, colors, panels, i, j + 1, rows, cols, matchingColors, premise);
+            }
         }
         return premise;
     }

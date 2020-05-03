@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class Tile extends JPanel {
     private ArrayList<Occupant> occupants;
     private Premise premise;
+    private boolean lamp;
 
     public Tile(){
         occupants = new ArrayList<>();
@@ -26,6 +27,10 @@ public class Tile extends JPanel {
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
+        if(lamp) {
+            graphics.setColor(Color.RED);
+            graphics.fillOval(1, 1, getWidth()/2, getHeight()/2);
+        }
         for (int i = 0, occupantsSize = occupants.size(); i < occupantsSize; i++) {
             Occupant o = occupants.get(i); // drawing on top of each other
             graphics.setColor(o.getBaseColor());
@@ -33,6 +38,7 @@ public class Tile extends JPanel {
             Image drawing = o.getDrawing();
             graphics.drawImage(drawing, getWidth() * 2 / 10, getHeight() * 2 / 10, null);
         }
+
 
     }
 
@@ -42,5 +48,13 @@ public class Tile extends JPanel {
 
     public Premise getPremise() {
         return premise;
+    }
+
+    public boolean getLamp() {
+        return lamp;
+    }
+
+    public void setLamp(boolean lamp) {
+        this.lamp = lamp;
     }
 }
