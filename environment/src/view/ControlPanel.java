@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,8 @@ public class ControlPanel extends JPanel {
     private JButton load;
     private JButton start;
     private JButton stop;
+    private JLabel lSlider;
+    private JSlider slider;
     public ControlPanel(PlayField playField) {
         this.playField = playField;
         lFileName = new JLabel("File: ");
@@ -37,21 +40,32 @@ public class ControlPanel extends JPanel {
         stop = new JButton("Stop");
         stop.addActionListener(this::stop);
         this.add(stop);
+
+        lSlider = new JLabel("Speed: ");
+        this.add(lSlider);
+
+        slider = new JSlider(JSlider.HORIZONTAL, 1, 100, 10);
+        slider.addChangeListener(this::sliderChanged);
+        slider.setEnabled(false);
+        this.add(slider);
     }
 
     private volatile boolean flag;
+    private volatile int divider = 10;
 
     private void stop(ActionEvent actionEvent) {
+        slider.setEnabled(false);
         flag = false;
     }
 
     private void start(ActionEvent actionEvent) {
         if(!flag) {
+            slider.setEnabled(true);
             flag = true;
             Thread thread = new Thread(() -> {
                 while (flag) {
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(1000 / divider);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -78,5 +92,9 @@ public class ControlPanel extends JPanel {
         } catch (IOException e) {
             QuarantineLogger.log(e.toString());
         }
+    }
+
+    private void sliderChanged(ChangeEvent changeEvent) {
+        divider = slider.getValue();
     }
 }
