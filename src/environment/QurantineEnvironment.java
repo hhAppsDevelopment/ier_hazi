@@ -1,12 +1,14 @@
 package environment;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import environment.model.Premise;
 import environment.occupants.Agent;
+import environment.occupants.Camera;
 import environment.occupants.Occupant;
 import environment.occupants.Person;
 import environment.view.PlayField;
@@ -70,10 +72,32 @@ public class QurantineEnvironment extends TimeSteppedEnvironment{
     }
     
     @Override
+    public Collection<Literal> getPercepts(String agName) {
+        if (name2ag.get(agName) == null) {
+            updateAgPercept(addAgent(agName));
+        }
+        return super.getPercepts(agName);
+    }
+    
+    private Agent addAgent(String agName) {
+    	Agent  newAgent;
+        if(agName.contains("camera")) {
+        	newAgent = new Camera(field.getTileGraph(), /*random Tile*/);
+        } else if(agName.contains("foodtransporter")) {
+        	
+        }
+    }
+    
+    @Override
     protected void stepStarted(int step) {
         //logger.info("start step "+step);
         lstep = ASSyntax.createLiteral("step", ASSyntax.createNumber(step+1));
         field.step();
+    }
+    
+    @Override
+    protected void stepFinished(int step, long time, boolean timeout) {
+    	
     }
     
     @Override
