@@ -1,6 +1,8 @@
 MAS ier_hazi {
 
 	infrastructure: Centralised
+	
+	environment: QuarantineEnvironment("")
 
 	agents:
 		agent1 sample_agent;

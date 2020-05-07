@@ -73,20 +73,25 @@ public class QurantineEnvironment extends TimeSteppedEnvironment{
     
     @Override
     public Collection<Literal> getPercepts(String agName) {
-        if (name2ag.get(agName) == null) {
-            updateAgPercept(addAgent(agName));
-        }
-        return super.getPercepts(agName);
+//        if (name2ag.get(agName) == null) {
+//            updateAgPercept(addAgent(agName));
+//        }
+//        return super.getPercepts(agName);
+    	System.out.println("agent name: "+agName);
+    	return null;
     }
     
-    private Agent addAgent(String agName) {
-    	Agent  newAgent;
-        if(agName.contains("camera")) {
-        	newAgent = new Camera(field.getTileGraph(), /*random Tile*/);
-        } else if(agName.contains("foodtransporter")) {
-        	
-        }
-    }
+//    private Agent addAgent(String agName) {
+//    	Agent  newAgent;
+//        if(agName.contains("camera")) {
+//        	newAgent = new Camera(field.getTileGraph(), /*random Tile*/);
+//        } else if(agName.contains("foodtransporter")) {
+//        	
+//        }
+//        
+//        ag2name.put(newAgent, agName);
+//        name2ag.put(agName, newAgent);
+//    }
     
     @Override
     protected void stepStarted(int step) {
