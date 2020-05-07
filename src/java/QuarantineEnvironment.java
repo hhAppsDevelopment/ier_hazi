@@ -188,7 +188,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     		int tileID=currentTile.getPremise().getTiles().indexOf(tile);
     		int distToTile=field.getTileGraph().getDijkstraShortestPath().getPath(currentTile, tile).getLength();
     		Literal ldistToTile=ASSyntax.createLiteral("distToTile", ASSyntax.createNumber(tileID), ASSyntax.createNumber(distToTile));
-    		addPercept(ldistToTile);
+    		addPercept(agName, ldistToTile);
     		for(Occupant oc: tile.getOccupants()) {
     			if(oc.isDead()) {
     				Literal lcorpse= ASSyntax.createLiteral("corpse", ASSyntax.createNumber(premise2id.get(currentTile.getPremise())),ASSyntax.createNumber(tileID));
