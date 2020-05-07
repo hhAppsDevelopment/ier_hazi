@@ -57,7 +57,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
 			System.exit(-1);
 		}
 		
-		super.init(new String[] { "1000" } ); // set step timeout
+		super.init(new String[] { "100" } ); // set step timeout
         setOverActionsPolicy(OverActionsPolicy.ignoreSecond);
 		
 		logger.info("init finished");
@@ -164,7 +164,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     		addPercept(ldistToTile);
     		for(Occupant oc: tile.getOccupants()) {
     			if(oc.isDead()) {
-    				Literal lcorpse= ASSyntax.createLiteral("corpse", ASSyntax.createNumber(tileID));
+    				Literal lcorpse= ASSyntax.createLiteral("corpse", ASSyntax.createNumber(premise2id.get(currentTile.getPremise())),ASSyntax.createNumber(tileID));
     				addPercept(agName, lcorpse);
     			}
     			if(oc instanceof Person) {
