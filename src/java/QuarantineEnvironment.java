@@ -1,4 +1,4 @@
-package environment;
+
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,7 +21,7 @@ import jason.asSyntax.Structure;
 import jason.environment.TimeSteppedEnvironment;
 import jason.environment.TimeSteppedEnvironment.OverActionsPolicy;
 
-public class QurantineEnvironment extends TimeSteppedEnvironment{
+public class QuarantineEnvironment extends TimeSteppedEnvironment{
 	
 	Map<Premise, Integer> premise2id = new HashMap<Premise, Integer>();
 	Map<Integer, Premise> id2premise = new HashMap<Integer, Premise>();
