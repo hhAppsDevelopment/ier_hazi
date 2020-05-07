@@ -128,6 +128,9 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     	String agName=ag2name.get(ag);
     	clearPercepts(agName);
     	
+    	Literal lpos= ASSyntax.createLiteral("pos", ASSyntax.createNumber(premise2id.get(ag.getCurrentTile().getPremise())),ASSyntax.createNumber(ag.getCurrentTile().getPremise().getTiles().indexOf(ag.getCurrentTile())));
+		addPercept(agName, lpos);
+    	
     	// all Tiles of the agent's current premise
     	for(Tile tile: ag.getCurrentTile().getPremise().getTiles()) {
     		int tileID=ag.getCurrentTile().getPremise().getTiles().indexOf(tile);
