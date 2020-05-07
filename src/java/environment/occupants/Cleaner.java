@@ -1,6 +1,6 @@
 package environment.occupants;
 
-import environment.model.TileGraph;
+import environment.view.PlayField;
 import environment.view.Tile;
 
 import javax.imageio.ImageIO;
@@ -17,8 +17,8 @@ public class Cleaner extends Agent {
         return drawing;
     }
 
-    public Cleaner(TileGraph tileGraph, Tile currentTile) {
-        super(tileGraph, currentTile);
+    public Cleaner(PlayField field, Tile currentTile) {
+        super(field, currentTile);
         if(drawing == null) {
             File drawable = new File("res/cleaner.png");
             try {

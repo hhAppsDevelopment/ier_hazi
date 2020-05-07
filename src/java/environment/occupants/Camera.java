@@ -1,6 +1,6 @@
 package environment.occupants;
 
-import environment.model.TileGraph;
+import environment.view.PlayField;
 import environment.view.QuarantineLogger;
 import environment.view.Tile;
 
@@ -16,8 +16,8 @@ public class Camera extends Agent {
         return drawing;
     }
 
-    public Camera(TileGraph tileGraph, Tile currentTile) {
-        super(tileGraph, currentTile);
+    public Camera(PlayField field, Tile currentTile) {
+        super(field, currentTile);
         if(drawing == null) {
             File drawable = new File("res/camera.png");
             try {

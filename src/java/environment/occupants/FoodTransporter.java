@@ -1,7 +1,7 @@
 package environment.occupants;
 
 import environment.model.Cabin;
-import environment.model.TileGraph;
+import environment.view.PlayField;
 import environment.view.Tile;
 
 import javax.imageio.ImageIO;
@@ -17,8 +17,8 @@ public class FoodTransporter extends Agent {
         return drawing;
     }
 
-    public FoodTransporter(TileGraph tileGraph, Tile currentTile) {
-        super(tileGraph, currentTile);
+    public FoodTransporter(PlayField field, Tile currentTile) {
+        super(field, currentTile);
         if(drawing == null) {
             File drawable = new File("res/food_transporter.png");
             try {
