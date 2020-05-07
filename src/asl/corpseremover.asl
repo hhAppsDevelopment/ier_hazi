@@ -7,4 +7,6 @@
 
 /* Plans */
 
-+step(_) : corpse(premise,tile) & pos(premise,tile)  <- removeCorpse.
++step(_) : corpse(premise,tile) & pos(premise,tile)  <- clearCorpse.
+
++step(_) : corpse(premise,tile) & pos(_,_)  <- setGoal(premise,tile).
