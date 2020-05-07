@@ -4,8 +4,6 @@ import jason.environment.TimeSteppedEnvironment;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 
 public class MainPanel extends JPanel {
     private ControlPanel controlPanel;
@@ -18,7 +16,7 @@ public class MainPanel extends JPanel {
     private JTextArea logText;
     private JScrollPane logPane;
 
-    public MainPanel(String arg, TimeSteppedEnvironment quarantineEnvironment) throws IOException {
+    public MainPanel(TimeSteppedEnvironment quarantineEnvironment) {
         this.setLayout(new BorderLayout());
         playField = new PlayField();
         this.add(controlPanel = new ControlPanel(quarantineEnvironment), BorderLayout.PAGE_START);
@@ -29,7 +27,6 @@ public class MainPanel extends JPanel {
         logPane = new JScrollPane(logText);
         logPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         this.add(logPane, BorderLayout.LINE_END);
-        playField.loadFile(new File(arg));
     }
 
     void append(String msg) {

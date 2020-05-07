@@ -4,6 +4,7 @@ import jason.environment.TimeSteppedEnvironment;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 
 
@@ -16,15 +17,17 @@ public class MainFrame extends JFrame {
 
     public MainFrame(String arg, TimeSteppedEnvironment quarantineEnvironment) throws IOException {
         this.setSize(width, height);
+        this.setResizable(false);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(screenSize.width / 2 - width/2, screenSize.height / 2 - height/2);
         this.setTitle(title);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         MainPanel mainPanel;
-        this.setContentPane(mainPanel = new MainPanel(arg, quarantineEnvironment));
+        this.setContentPane(mainPanel = new MainPanel(quarantineEnvironment));
         playField = mainPanel.getPlayField();
-        this.setResizable(false);
         QuarantineLogger.setMainPanel(mainPanel);
+        this.setVisible(true);
+        playField.loadFile(new File(arg));
     }
 
     public PlayField getPlayField() {
