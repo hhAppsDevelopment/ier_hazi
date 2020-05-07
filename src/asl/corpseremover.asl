@@ -7,4 +7,4 @@
 
 /* Plans */
 
-+step(_) : corpse(_,tile) & (pos(A,_,_) | A == -1) <- removeCorpse.
++step(_) : corpse(premise,tile) & pos(premise,tile)  <- removeCorpse.
