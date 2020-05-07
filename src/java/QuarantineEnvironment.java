@@ -33,8 +33,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     /** Called before the MAS execution with the args informed in .mas2j */
     @Override
     public void init(String[] args) {
-        super.init(new String[] { "1000" } ); // set step timeout
-        setOverActionsPolicy(OverActionsPolicy.ignoreSecond);
+        
         
         //initializing MainFrame with path to map
 		try {
@@ -58,6 +57,11 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
 			e.printStackTrace();
 			System.exit(-1);
 		}
+		
+		super.init(new String[] { "1000" } ); // set step timeout
+        setOverActionsPolicy(OverActionsPolicy.ignoreSecond);
+		
+		logger.info("init finished");
 
     }
     
