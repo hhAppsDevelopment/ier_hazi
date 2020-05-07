@@ -12,8 +12,8 @@ public abstract class Agent extends Occupant {
         field.addAgent(this);
     }
 
-    @Override
-    public void step() {
-
-    }
+//    @Override
+//    public void step() {
+//
+//    }
 }

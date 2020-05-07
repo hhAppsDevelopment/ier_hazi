@@ -17,6 +17,16 @@ public class PlayField extends JPanel {
     private ArrayList<Person> people;
 
     private TileGraph tileGraph;
+    
+    private int stepTime=100;
+    
+    public void setStepTime(int millis) {
+    	stepTime=millis;
+    }
+    
+    public int getStepTime() {
+    	return stepTime;
+    }
 
     public PlayField() {
         this.setLayout(null);

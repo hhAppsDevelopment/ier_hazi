@@ -29,7 +29,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     private Literal lstep; // current step
     
     PlayField field;
-    
+        
     /** Called before the MAS execution with the args informed in .mas2j */
     @Override
     public void init(String[] args) {
@@ -37,7 +37,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
         
         //initializing MainFrame with path to map
 		try {
-			MainFrame frame = new MainFrame(args[0], this);
+			MainFrame frame = new MainFrame(args[0]);
 			field = frame.getPlayField();
 			int i = 0;
 			for (Premise premise : field.getTileGraph().getCorridors()) {
@@ -57,15 +57,15 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
 			System.exit(-1);
 		}
 		
-		super.init(new String[] { "100" } ); // set step timeout
+		super.init(new String[] { "10" } ); // set step timeout
         setOverActionsPolicy(OverActionsPolicy.ignoreSecond);
-		
+        		
 		logger.info("init finished");
 
     }
     
     @Override
-    public boolean executeAction(String agName, Structure action) {
+    public synchronized boolean executeAction(String agName, Structure action) {
     	String actId = action.getFunctor();
     	Agent ag=name2ag.get(agName);
     	
@@ -84,15 +84,28 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     	} else if(actId.equals("unlockPremise")) {
     		ag.getCurrentTile().getPremise().setLocked(false);
     	} else if(actId.equals("setGoal")) {
+    		
     		try {
 				ag.setGoal(id2premise.get((int)((NumberTerm)action.getTerm(0)).solve()).getTiles().get((int)((NumberTerm)action.getTerm(1)).solve()));
 			} catch (NoValueException e) {
 				e.printStackTrace();
 			}
+    		logger.info("setGoal");
     	}
     	
     	return true;
     	
+    }
+    
+
+    @Override
+    protected int requiredStepsForAction(String agName, Structure action) {
+        if (action.getFunctor().equals("setGoal")) {
+            return 1;
+        } else if (action.getFunctor().equals("clearCorpse")) {
+        	return 1;
+        }
+        return super.requiredStepsForAction(agName, action);
     }
     
     @Override
@@ -138,6 +151,14 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     
     @Override
     protected void stepFinished(int step, long time, boolean timeout) {
+    	logger.info("time: "+time);
+    	if(time<field.getStepTime()) {
+    		try {
+    			Thread.sleep(field.getStepTime()-time);
+    		} catch(Exception e) {
+    			e.printStackTrace();
+    		}
+    	}
         field.step();
     }
     

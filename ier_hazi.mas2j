@@ -3,6 +3,8 @@ MAS ier_hazi {
 	infrastructure: Centralised
 	
 	environment: QuarantineEnvironment("res/map.csv")
+	
+//	executionControl: QuarantineExecutionControl
 
 	agents:
 		corpseremover #1;

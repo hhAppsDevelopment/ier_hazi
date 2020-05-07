@@ -16,10 +16,10 @@ public class MainPanel extends JPanel {
     private JTextArea logText;
     private JScrollPane logPane;
 
-    public MainPanel(TimeSteppedEnvironment quarantineEnvironment) {
+    public MainPanel() {
         this.setLayout(new BorderLayout());
         playField = new PlayField();
-        this.add(controlPanel = new ControlPanel(quarantineEnvironment), BorderLayout.PAGE_START);
+        this.add(controlPanel = new ControlPanel(playField), BorderLayout.PAGE_START);
         this.add(playField, BorderLayout.CENTER);
         logText = new JTextArea();
         logText.setColumns(30);

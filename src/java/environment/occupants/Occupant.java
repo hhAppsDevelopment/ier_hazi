@@ -103,6 +103,7 @@ public abstract class Occupant {
     }
 
     protected void setGoal(Tile goal, Predicate<List<Tile>> predicate) {
+    	if(hasGoal()) return;
         if (currentTile.equals(goal)) {
             this.goal = null;
             next = null;

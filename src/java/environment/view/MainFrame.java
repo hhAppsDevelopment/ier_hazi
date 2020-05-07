@@ -15,7 +15,7 @@ public class MainFrame extends JFrame {
     private PlayField playField;
 
 
-    public MainFrame(String arg, TimeSteppedEnvironment quarantineEnvironment) throws IOException {
+    public MainFrame(String arg) throws IOException {
         this.setSize(width, height);
         this.setResizable(false);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -23,7 +23,7 @@ public class MainFrame extends JFrame {
         this.setTitle(title);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         MainPanel mainPanel;
-        this.setContentPane(mainPanel = new MainPanel(quarantineEnvironment));
+        this.setContentPane(mainPanel = new MainPanel());
         playField = mainPanel.getPlayField();
         QuarantineLogger.setMainPanel(mainPanel);
         this.setVisible(true);
