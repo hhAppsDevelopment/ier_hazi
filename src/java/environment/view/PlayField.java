@@ -65,7 +65,6 @@ public class PlayField extends JPanel {
             Tile personTile = p.getRandomTile();
             Person person = new Person(tileGraph, personTile);
             people.add(person);
-            personTile.registerOccupant(person);
         }
 
         people.get((int) (Math.random()*people.size())).setContagious();

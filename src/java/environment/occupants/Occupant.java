@@ -40,6 +40,7 @@ public abstract class Occupant {
     private DijkstraShortestPath<Tile, DefaultWeightedEdge> dijkstraShortestPath;
 
     protected Occupant(TileGraph tileGraph, Tile currentTile) {
+        currentTile.registerOccupant(this);
         this.currentTile = currentTile;
         this.tileGraph = tileGraph;
         this.graph = tileGraph.getGraph();
