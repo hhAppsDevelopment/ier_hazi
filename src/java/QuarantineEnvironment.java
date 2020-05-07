@@ -134,12 +134,11 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     protected void stepStarted(int step) {
         //logger.info("start step "+step);
         lstep = ASSyntax.createLiteral("step", ASSyntax.createNumber(step+1));
-        field.step();
     }
     
     @Override
     protected void stepFinished(int step, long time, boolean timeout) {
-    	
+        field.step();
     }
     
     @Override
