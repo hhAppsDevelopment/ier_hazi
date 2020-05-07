@@ -97,7 +97,7 @@ public abstract class Occupant {
         } else --remaining;
     }
 
-    protected void setGoal(Tile goal) {
+    public void setGoal(Tile goal) {
         setGoal(goal, tiles -> true);
     }
 
