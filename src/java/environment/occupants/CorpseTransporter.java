@@ -1,6 +1,6 @@
 package environment.occupants;
 
-import environment.model.TileGraph;
+import environment.view.PlayField;
 import environment.view.Tile;
 
 import javax.imageio.ImageIO;
@@ -8,7 +8,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-public class CorpseTransporter extends Agent {
+public class CorpseRemover extends Agent {
 
     private static Image drawing;
 
@@ -18,8 +18,8 @@ public class CorpseTransporter extends Agent {
         return drawing;
     }
 
-    public CorpseTransporter(TileGraph tileGraph, Tile currentTile) {
-        super(tileGraph, currentTile);
+    public CorpseRemover(PlayField field, Tile currentTile) {
+        super(field, currentTile);
         if(drawing == null) {
             File drawable = new File("res/corpse_transporter.png");
             try {
