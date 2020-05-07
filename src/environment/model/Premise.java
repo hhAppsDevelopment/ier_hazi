@@ -1,6 +1,6 @@
-package model;
+package environment.model;
 
-import view.Tile;
+import environment.view.Tile;
 
 import java.awt.*;
 import java.util.ArrayList;

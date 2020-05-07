@@ -1,4 +1,4 @@
-package view;
+package environment.view;
 
 public class QuarantineLogger {
     private static MainPanel mainPanel;

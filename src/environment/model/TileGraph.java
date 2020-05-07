@@ -1,9 +1,9 @@
-package model;
+package environment.model;
 
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
-import view.Tile;
+import environment.view.Tile;
 
 import java.awt.Color;
 import java.util.ArrayList;

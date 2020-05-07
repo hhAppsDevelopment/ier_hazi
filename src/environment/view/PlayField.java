@@ -1,8 +1,8 @@
-package view;
+package environment.view;
 
-import model.Premise;
-import model.TileGraph;
-import occupants.*;
+import environment.model.Premise;
+import environment.model.TileGraph;
+import environment.occupants.*;
 
 import javax.swing.*;
 import java.awt.*;

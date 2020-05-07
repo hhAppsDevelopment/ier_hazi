@@ -1,10 +1,10 @@
-package occupants;
+package environment.occupants;
 
-import model.Cabin;
-import model.Corridor;
-import model.SmokingRoom;
-import model.TileGraph;
-import view.Tile;
+import environment.model.Cabin;
+import environment.model.Corridor;
+import environment.model.SmokingRoom;
+import environment.model.TileGraph;
+import environment.view.Tile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -203,7 +203,7 @@ public class Person extends Occupant {
     }
 
     @Override
-    protected boolean isDead() {
+	public boolean isDead() {
         return state == ILLNESS_STATE.DEAD;
     }
 }

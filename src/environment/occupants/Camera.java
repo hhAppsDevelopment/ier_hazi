@@ -1,8 +1,8 @@
-package occupants;
+package environment.occupants;
 
-import model.TileGraph;
-import view.QuarantineLogger;
-import view.Tile;
+import environment.model.TileGraph;
+import environment.view.QuarantineLogger;
+import environment.view.Tile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

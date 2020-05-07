@@ -1,7 +1,7 @@
-package occupants;
+package environment.occupants;
 
-import model.TileGraph;
-import view.Tile;
+import environment.model.TileGraph;
+import environment.view.Tile;
 
 import java.awt.*;
 

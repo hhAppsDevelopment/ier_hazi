@@ -1,11 +1,11 @@
-package occupants;
+package environment.occupants;
 
-import model.TileGraph;
+import environment.model.TileGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import view.Tile;
+import environment.view.Tile;
 
 import java.awt.*;
 import java.util.List;
@@ -26,7 +26,15 @@ public abstract class Occupant {
     public abstract Image getDrawing();
 
     protected Tile currentTile;
-    protected Color baseColor;
+    public Tile getCurrentTile() {
+		return currentTile;
+	}
+
+	public void setCurrentTile(Tile currentTile) {
+		this.currentTile = currentTile;
+	}
+
+	protected Color baseColor;
     protected TileGraph tileGraph;
     private Graph<Tile, DefaultWeightedEdge> graph;
     private DijkstraShortestPath<Tile, DefaultWeightedEdge> dijkstraShortestPath;
@@ -135,7 +143,7 @@ public abstract class Occupant {
     public void giveMedicine() {
     }
 
-    protected boolean isDead() {
+    public boolean isDead() {
         return false;
     }
 }

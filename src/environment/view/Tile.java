@@ -1,7 +1,7 @@
-package view;
+package environment.view;
 
-import model.Premise;
-import occupants.Occupant;
+import environment.model.Premise;
+import environment.occupants.Occupant;
 
 import javax.swing.*;
 import java.awt.*;
