@@ -5,12 +5,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import environment.model.Premise;
 import environment.occupants.Agent;
 import environment.occupants.Camera;
+import environment.occupants.FoodTransporter;
 import environment.occupants.Occupant;
 import environment.occupants.Person;
+import environment.view.MainFrame;
 import environment.view.PlayField;
 import environment.view.Tile;
 import jason.NoValueException;
@@ -22,6 +25,8 @@ import jason.environment.TimeSteppedEnvironment;
 import jason.environment.TimeSteppedEnvironment.OverActionsPolicy;
 
 public class QuarantineEnvironment extends TimeSteppedEnvironment{
+	
+	private Logger logger = Logger.getLogger("ier_hazi.mas2j."+QuarantineEnvironment.class.getName());
 	
 	Map<Premise, Integer> premise2id = new HashMap<Premise, Integer>();
 	Map<Integer, Premise> id2premise = new HashMap<Integer, Premise>();
@@ -38,6 +43,11 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     public void init(String[] args) {
         super.init(new String[] { "1000" } ); // set step timeout
         setOverActionsPolicy(OverActionsPolicy.ignoreSecond);
+        
+        //initializing MainFrame with path to map
+        MainFrame frame=new MainFrame(args[0]);
+        frame.setVisible(true);
+        
     }
     
     @Override
@@ -73,25 +83,27 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     
     @Override
     public Collection<Literal> getPercepts(String agName) {
-//        if (name2ag.get(agName) == null) {
-//            updateAgPercept(addAgent(agName));
-//        }
-//        return super.getPercepts(agName);
-    	System.out.println("agent name: "+agName);
-    	return null;
+        if (name2ag.get(agName) == null) {
+            updateAgPercept(addAgent(agName));
+        }
+        
+    	logger.info(agName+" joined");
+    	
+    	return super.getPercepts(agName);
     }
     
-//    private Agent addAgent(String agName) {
-//    	Agent  newAgent;
-//        if(agName.contains("camera")) {
-//        	newAgent = new Camera(field.getTileGraph(), /*random Tile*/);
-//        } else if(agName.contains("foodtransporter")) {
-//        	
-//        }
-//        
-//        ag2name.put(newAgent, agName);
-//        name2ag.put(agName, newAgent);
-//    }
+    private Agent addAgent(String agName) {
+    	Agent  newAgent;
+        if(agName.contains("camera")) {
+        	newAgent = new Camera(field.getTileGraph(), /*random Tile*/);
+        } else if(agName.contains("foodtransporter")) {
+        	newAgent = new FoodTransporter(field.getTileGraph(), /*random Tile*/);
+        }
+        
+        ag2name.put(newAgent, agName);
+        name2ag.put(agName, newAgent);
+        return newAgent;
+    }
     
     @Override
     protected void stepStarted(int step) {

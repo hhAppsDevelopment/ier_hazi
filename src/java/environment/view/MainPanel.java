@@ -2,6 +2,8 @@ package environment.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class MainPanel extends JPanel {
     private ControlPanel controlPanel;
@@ -20,6 +22,7 @@ public class MainPanel extends JPanel {
         logPane = new JScrollPane(logText);
         logPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         this.add(logPane, BorderLayout.LINE_END);
+        
     }
 
      void append(String msg) {

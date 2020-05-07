@@ -2,7 +2,7 @@ MAS ier_hazi {
 
 	infrastructure: Centralised
 	
-	environment: QuarantineEnvironment("")
+	environment: QuarantineEnvironment("res/map.csv")
 
 	agents:
 		agent1 sample_agent;

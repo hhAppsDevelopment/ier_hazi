@@ -25,6 +25,7 @@ public class PlayField extends JPanel {
         this.setLayout(null);
         agents = new ArrayList<>();
         people = new ArrayList<>();
+        
     }
 
     public void loadFile(File file) throws IOException {
