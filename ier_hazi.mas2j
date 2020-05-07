@@ -5,7 +5,7 @@ MAS ier_hazi {
 	environment: QuarantineEnvironment("res/map.csv")
 
 	agents:
-		agent1 sample_agent;
+		corpseremover #1;
 
 	aslSourcePath:
 		"src/asl";
