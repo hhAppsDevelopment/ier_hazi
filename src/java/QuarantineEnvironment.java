@@ -101,8 +101,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
             updateAgPercept(addAgent(agName));
         }
         
-    	logger.info(agName+" joined");
-    	
+    	  	
     	return super.getPercepts(agName);
     }
     
@@ -120,6 +119,8 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
         
         ag2name.put(newAgent, agName);
         name2ag.put(agName, newAgent);
+        
+        logger.info(agName+" joined");
         return newAgent;
     }
 
