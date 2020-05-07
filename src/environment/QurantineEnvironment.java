@@ -9,6 +9,7 @@ import environment.model.Premise;
 import environment.occupants.Agent;
 import environment.occupants.Occupant;
 import environment.occupants.Person;
+import environment.view.PlayField;
 import environment.view.Tile;
 import jason.NoValueException;
 import jason.asSyntax.ASSyntax;
@@ -20,10 +21,15 @@ import jason.environment.TimeSteppedEnvironment.OverActionsPolicy;
 
 public class QurantineEnvironment extends TimeSteppedEnvironment{
 	
-	List<Premise> allPremises = new ArrayList<Premise>();
+	Map<Premise, Integer> premise2id = new HashMap<Premise, Integer>();
+	Map<Integer, Premise> id2premise = new HashMap<Integer, Premise>();
 	
 	Map<Agent,String> ag2name = new HashMap<Agent,String>();
     Map<String,Agent> name2ag = new HashMap<String,Agent>();
+    
+    private Literal lstep; // current step
+    
+    PlayField field;
     
     /** Called before the MAS execution with the args informed in .mas2j */
     @Override
@@ -53,7 +59,7 @@ public class QurantineEnvironment extends TimeSteppedEnvironment{
     		ag.getCurrentTile().getPremise().setLocked(false);
     	} else if(actId.equals("setGoal")) {
     		try {
-				ag.setGoal(allPremises.get((int)((NumberTerm)action.getTerm(0)).solve()).getTiles().get((int)((NumberTerm)action.getTerm(1)).solve()));
+				ag.setGoal(id2premise.get((int)((NumberTerm)action.getTerm(0)).solve()).getTiles().get((int)((NumberTerm)action.getTerm(1)).solve()));
 			} catch (NoValueException e) {
 				e.printStackTrace();
 			}
@@ -61,6 +67,13 @@ public class QurantineEnvironment extends TimeSteppedEnvironment{
     	
     	return true;
     	
+    }
+    
+    @Override
+    protected void stepStarted(int step) {
+        //logger.info("start step "+step);
+        lstep = ASSyntax.createLiteral("step", ASSyntax.createNumber(step+1));
+        field.step();
     }
     
     @Override
@@ -88,6 +101,8 @@ public class QurantineEnvironment extends TimeSteppedEnvironment{
     			}
     		}
     	}
+    	
+        addPercept(agName, lstep);
     }
 
 }
