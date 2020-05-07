@@ -11,4 +11,4 @@
 
 +step(_) : corpse(premise,tile) & not pos(premise,tile) & pos(premise,_) & .findall(d,distToTile(_,dist),L) & .min(L,dist) & distToTile(tile,dist) <- setGoal(premise,tile).
 
-+step(_) : corpse(premise,tile) & not pos(premise,tile) & pos(_,_)  <- setGoal(premise,tile).
++step(_) : corpse(premise,tile) & not pos(premise,_) & pos(_,_)  <- setGoal(premise,tile).
