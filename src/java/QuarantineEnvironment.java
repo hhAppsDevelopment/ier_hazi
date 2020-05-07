@@ -1,18 +1,5 @@
-
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
 import environment.model.Premise;
-import environment.occupants.Agent;
-import environment.occupants.Camera;
-import environment.occupants.FoodTransporter;
-import environment.occupants.Occupant;
-import environment.occupants.Person;
+import environment.occupants.*;
 import environment.view.MainFrame;
 import environment.view.PlayField;
 import environment.view.Tile;
@@ -22,7 +9,12 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.NumberTerm;
 import jason.asSyntax.Structure;
 import jason.environment.TimeSteppedEnvironment;
-import jason.environment.TimeSteppedEnvironment.OverActionsPolicy;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class QuarantineEnvironment extends TimeSteppedEnvironment{
 	
@@ -45,9 +37,14 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
         setOverActionsPolicy(OverActionsPolicy.ignoreSecond);
         
         //initializing MainFrame with path to map
-        MainFrame frame=new MainFrame(args[0]);
-        frame.setVisible(true);
-        
+		try {
+			MainFrame frame = new MainFrame(args[0], this);
+			frame.setVisible(true);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+
     }
     
     @Override
@@ -93,11 +90,11 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     }
     
     private Agent addAgent(String agName) {
-    	Agent  newAgent;
+    	Agent  newAgent = null;
         if(agName.contains("camera")) {
-        	newAgent = new Camera(field.getTileGraph(), /*random Tile*/);
+        	newAgent = new Camera(field.getTileGraph(), null);
         } else if(agName.contains("foodtransporter")) {
-        	newAgent = new FoodTransporter(field.getTileGraph(), /*random Tile*/);
+        	newAgent = new FoodTransporter(field.getTileGraph(), null);
         }
         
         ag2name.put(newAgent, agName);
