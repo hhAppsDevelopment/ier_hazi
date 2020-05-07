@@ -11,8 +11,10 @@ import jason.asSyntax.Structure;
 import jason.environment.TimeSteppedEnvironment;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -66,15 +68,18 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     
     @Override
     public synchronized boolean executeAction(String agName, Structure action) {
+    	logger.info(agName+" ea start");
     	String actId = action.getFunctor();
     	Agent ag=name2ag.get(agName);
     	
     	if(actId.equals("cleanPremise")) {
     		ag.getCurrentTile().getPremise().getContagious().clear();
     	} else if(actId.equals("clearCorpse")) {
+    		List<Occupant> toRemove = new ArrayList<Occupant>();
     		ag.getCurrentTile().getOccupants().forEach(occupant -> {
-                if(occupant.isDead()) ag.getCurrentTile().unregisterOccupant(occupant);
+                if(occupant.isDead()) toRemove.add(occupant); 
             });
+    		toRemove.forEach(occupant -> {ag.getCurrentTile().unregisterOccupant(occupant);});
     	} else if(actId.equals("leaveFood")) {
     		ag.getCurrentTile().getPremise().getTiles().forEach(tile -> tile.getOccupants().forEach(Occupant::resetFood));
     	} else if(actId.equals("leaveMedicine")) {
@@ -92,6 +97,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
 			}
     		logger.info("setGoal");
     	}
+    	logger.info(agName+" ea end");
     	
     	return true;
     	
