@@ -39,6 +39,20 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
         //initializing MainFrame with path to map
 		try {
 			MainFrame frame = new MainFrame(args[0], this);
+			field = frame.getPlayField();
+			int i = 0;
+			for (Premise premise : field.getTileGraph().getCorridors()) {
+				premise2id.put(premise, i);
+				id2premise.put(i++, premise);
+			}
+			for (Premise premise : field.getTileGraph().getCabins()) {
+				premise2id.put(premise, i);
+				id2premise.put(i++, premise);
+			}
+			for (Premise premise : field.getTileGraph().getSmokingRooms()) {
+				premise2id.put(premise, i);
+				id2premise.put(i++, premise);
+			}
 			frame.setVisible(true);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -90,19 +104,29 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     }
     
     private Agent addAgent(String agName) {
-    	Agent  newAgent = null;
+    	Agent newAgent = null;
         if(agName.contains("camera")) {
-        	newAgent = new Camera(field.getTileGraph(), null);
+        	newAgent = new Camera(field, getNextEmptyRoomTile());
+        } else if(agName.contains("cleaner")) {
+        	newAgent = new Cleaner(field, field.getTileGraph().getCorridors().get(0).getRandomTile());
+        } else if(agName.contains("corpseremover")) {
+        	newAgent = new CorpseTransporter(field, field.getTileGraph().getCorridors().get(0).getRandomTile());
         } else if(agName.contains("foodtransporter")) {
-        	newAgent = new FoodTransporter(field.getTileGraph(), null);
+        	newAgent = new FoodTransporter(field, field.getTileGraph().getCorridors().get(0).getRandomTile());
         }
         
         ag2name.put(newAgent, agName);
         name2ag.put(agName, newAgent);
         return newAgent;
     }
-    
-    @Override
+
+    int next = 0;
+	private Tile getNextEmptyRoomTile() {
+		assert (field.getTileGraph().getCabins().size() > next);
+		return field.getTileGraph().getCabins().get(next++).getTiles().get(0);
+	}
+
+	@Override
     protected void stepStarted(int step) {
         //logger.info("start step "+step);
         lstep = ASSyntax.createLiteral("step", ASSyntax.createNumber(step+1));

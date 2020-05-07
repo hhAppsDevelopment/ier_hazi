@@ -11,6 +11,8 @@ public class MainFrame extends JFrame {
     private static final int width = 1600;
     private static final int height = 900;
     private static final String title = "Automatic Quarantine System Simulation";
+    private PlayField playField;
+
 
     public MainFrame(String arg, TimeSteppedEnvironment quarantineEnvironment) throws IOException {
         this.setSize(width, height);
@@ -20,8 +22,12 @@ public class MainFrame extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         MainPanel mainPanel;
         this.setContentPane(mainPanel = new MainPanel(arg, quarantineEnvironment));
+        playField = mainPanel.getPlayField();
         this.setResizable(false);
         QuarantineLogger.setMainPanel(mainPanel);
     }
 
+    public PlayField getPlayField() {
+        return playField;
+    }
 }

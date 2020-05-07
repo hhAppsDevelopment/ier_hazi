@@ -9,6 +9,11 @@ import java.io.IOException;
 
 public class MainPanel extends JPanel {
     private ControlPanel controlPanel;
+
+    public PlayField getPlayField() {
+        return playField;
+    }
+
     private PlayField playField;
     private JTextArea logText;
     private JScrollPane logPane;

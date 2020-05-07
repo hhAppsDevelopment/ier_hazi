@@ -8,7 +8,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-public class CorpseRemover extends Agent {
+public class CorpseTransporter extends Agent {
 
     private static Image drawing;
 
@@ -18,7 +18,7 @@ public class CorpseRemover extends Agent {
         return drawing;
     }
 
-    public CorpseRemover(PlayField field, Tile currentTile) {
+    public CorpseTransporter(PlayField field, Tile currentTile) {
         super(field, currentTile);
         if(drawing == null) {
             File drawable = new File("res/corpse_transporter.png");
