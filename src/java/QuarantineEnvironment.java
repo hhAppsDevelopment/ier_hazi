@@ -52,7 +52,6 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
 				premise2id.put(premise, i);
 				id2premise.put(i++, premise);
 			}
-			frame.setVisible(true);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(-1);
