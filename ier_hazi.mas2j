@@ -9,6 +9,7 @@ MAS ier_hazi {
 	agents:
 		corpseremover #4;
 		camera #32;
+		manager;
 
 	aslSourcePath:
 		"src/asl";

@@ -88,12 +88,13 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     	} else if(actId.equals("unlockPremise")) {
     		ag.getCurrentTile().getPremise().setLocked(false);
     	} else if(actId.equals("setGoal")) {
-    		
     		try {
 				ag.setGoal(id2premise.get((int)((NumberTerm)action.getTerm(0)).solve()).getTiles().get((int)((NumberTerm)action.getTerm(1)).solve()));
 			} catch (NoValueException e) {
 				e.printStackTrace();
 			}
+    	} else if(actId.equals("returnToCorridor")) {   		
+			ag.setGoal(field.getTileGraph().getCorridors().get(0).getRandomTile());
     	}
     	
     	return true;
@@ -106,6 +107,8 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
         if (action.getFunctor().equals("setGoal")) {
             return 1;
         } else if (action.getFunctor().equals("clearCorpse")) {
+        	return 1;
+        } else if (action.getFunctor().equals("returnToCorridor")) {
         	return 1;
         }
         return super.requiredStepsForAction(agName, action);
@@ -132,7 +135,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
         } else if(agName.contains("foodtransporter")) {
         	newAgent = new FoodTransporter(field, field.getTileGraph().getCorridors().get(0).getRandomTile());
         } else if(agName.equals("manager")) {
-        	
+        	newAgent = new Manager(field, field.getTileGraph().getCorridors().get(0).getRandomTile());
         }
         
         ag2name.put(newAgent, agName);
@@ -169,9 +172,15 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     
     @Override
     protected void updateAgsPercept() {
+    	updateGlobalKnowledge();
         for (Agent ag: ag2name.keySet()) {
             updateAgPercept(ag);
         }
+    }
+    
+    protected void updateGlobalKnowledge() {
+    	Literal lcorridor=ASSyntax.createLiteral("corridorID", ASSyntax.createNumber(premise2id.get(field.getTileGraph().getCorridors().get(0))));
+    	addPercept(lcorridor);
     }
     
     protected void updateAgPercept(Agent ag) {
@@ -193,11 +202,11 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     				addPercept(agName, lcorpse);
     				interestingTile=true;
     			}
-    			if(oc instanceof Person) {
-    				Literal lperson=ASSyntax.createLiteral("person", ASSyntax.createNumber(tileID));
-    				addPercept(agName, lperson);
-    				interestingTile=true;
-    			}
+//    			if(oc instanceof Person) {
+//    				Literal lperson=ASSyntax.createLiteral("person", ASSyntax.createNumber(tileID));
+//    				addPercept(agName, lperson);
+//    				interestingTile=true;
+//    			}
     		}
     		
     		if(interestingTile) {
@@ -207,7 +216,8 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     		}
     	}
     	
-        addPercept(agName, lstep);
+    	
+    	addPercept(agName, lstep);
     }
 
 }
