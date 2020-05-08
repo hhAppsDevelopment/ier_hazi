@@ -68,7 +68,6 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     
     @Override
     public synchronized boolean executeAction(String agName, Structure action) {
-    	logger.info(agName+" ea start");
     	String actId = action.getFunctor();
     	Agent ag=name2ag.get(agName);
     	
@@ -95,9 +94,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
 			} catch (NoValueException e) {
 				e.printStackTrace();
 			}
-    		logger.info("setGoal");
     	}
-    	logger.info(agName+" ea end");
     	
     	return true;
     	
@@ -134,6 +131,8 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
         	newAgent = new CorpseTransporter(field, field.getTileGraph().getCorridors().get(0).getRandomTile());
         } else if(agName.contains("foodtransporter")) {
         	newAgent = new FoodTransporter(field, field.getTileGraph().getCorridors().get(0).getRandomTile());
+        } else if(agName.equals("manager")) {
+        	
         }
         
         ag2name.put(newAgent, agName);
@@ -185,19 +184,26 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
 		Tile currentTile=ag.getCurrentTile();
     	// all Tiles of the agent's current premise
     	for(Tile tile: currentTile.getPremise().getTiles()) {
-    		int tileID=currentTile.getPremise().getTiles().indexOf(tile);
-    		int distToTile=field.getTileGraph().getDijkstraShortestPath().getPath(currentTile, tile).getLength();
-    		Literal ldistToTile=ASSyntax.createLiteral("distToTile", ASSyntax.createNumber(tileID), ASSyntax.createNumber(distToTile));
-    		addPercept(agName, ldistToTile);
+    		boolean interestingTile=false;
+			int tileID=currentTile.getPremise().getTiles().indexOf(tile);
+    		
     		for(Occupant oc: tile.getOccupants()) {
     			if(oc.isDead()) {
     				Literal lcorpse= ASSyntax.createLiteral("corpse", ASSyntax.createNumber(premise2id.get(currentTile.getPremise())),ASSyntax.createNumber(tileID));
     				addPercept(agName, lcorpse);
+    				interestingTile=true;
     			}
     			if(oc instanceof Person) {
     				Literal lperson=ASSyntax.createLiteral("person", ASSyntax.createNumber(tileID));
     				addPercept(agName, lperson);
+    				interestingTile=true;
     			}
+    		}
+    		
+    		if(interestingTile) {
+        		int distToTile=field.getTileGraph().getDijkstraShortestPath().getPath(currentTile, tile).getLength();
+        		Literal ldistToTile=ASSyntax.createLiteral("distToTile", ASSyntax.createNumber(tileID), ASSyntax.createNumber(distToTile));
+        		addPercept(agName, ldistToTile);
     		}
     	}
     	

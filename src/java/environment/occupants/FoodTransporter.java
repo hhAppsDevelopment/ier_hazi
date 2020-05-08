@@ -19,14 +19,17 @@ public class FoodTransporter extends Agent {
 
     public FoodTransporter(PlayField field, Tile currentTile) {
         super(field, currentTile);
-        if(drawing == null) {
-            File drawable = new File("res/food_transporter.png");
-            try {
-                drawing = ImageIO.read(drawable).getScaledInstance(currentTile.getWidth() * 6 / 10, currentTile.getHeight() * 6 / 10, Image.SCALE_SMOOTH);
-            } catch (IOException e) {
-                e.printStackTrace();
+        synchronized (FoodTransporter.class) {
+        	if(drawing == null) {
+                File drawable = new File("res/food_transporter.png");
+                try {
+                    drawing = ImageIO.read(drawable).getScaledInstance(currentTile.getWidth() * 6 / 10, currentTile.getHeight() * 6 / 10, Image.SCALE_SMOOTH);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+		}
+        
     }
 
     private void leaveFood() {

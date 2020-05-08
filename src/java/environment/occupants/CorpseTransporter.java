@@ -20,14 +20,17 @@ public class CorpseTransporter extends Agent {
 
     public CorpseTransporter(PlayField field, Tile currentTile) {
         super(field, currentTile);
-        if(drawing == null) {
-            File drawable = new File("res/corpse_transporter.png");
-            try {
-                drawing = ImageIO.read(drawable).getScaledInstance(currentTile.getWidth() * 6 / 10, currentTile.getHeight() * 6 / 10, Image.SCALE_SMOOTH);
-            } catch (IOException e) {
-                e.printStackTrace();
+        synchronized (CorpseTransporter.class) {
+        	if(drawing == null) {
+                File drawable = new File("res/corpse_transporter.png");
+                try {
+                    drawing = ImageIO.read(drawable).getScaledInstance(currentTile.getWidth() * 6 / 10, currentTile.getHeight() * 6 / 10, Image.SCALE_SMOOTH);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+		}
+        
     }
 
     private void clearCorpse() {

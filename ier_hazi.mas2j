@@ -7,7 +7,8 @@ MAS ier_hazi {
 //	executionControl: QuarantineExecutionControl
 
 	agents:
-		corpseremover #1;
+		corpseremover #4;
+		camera #32;
 
 	aslSourcePath:
 		"src/asl";

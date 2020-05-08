@@ -18,14 +18,16 @@ public class Camera extends Agent {
 
     public Camera(PlayField field, Tile currentTile) {
         super(field, currentTile);
-        if(drawing == null) {
-            File drawable = new File("res/camera.png");
-            try {
-                drawing = ImageIO.read(drawable).getScaledInstance(currentTile.getWidth() * 6 / 10, currentTile.getHeight() * 6 / 10, Image.SCALE_SMOOTH);
-            } catch (IOException e) {
-                e.printStackTrace();
+        synchronized (Camera.class) {
+        	if(drawing == null) {
+                File drawable = new File("res/camera.png");
+                try {
+                	drawing = ImageIO.read(drawable).getScaledInstance(currentTile.getWidth() * 6 / 10, currentTile.getHeight() * 6 / 10, Image.SCALE_SMOOTH);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+		}
     }
 
     @Override

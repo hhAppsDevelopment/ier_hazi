@@ -65,14 +65,17 @@ public class Person extends Occupant {
 
     public Person(TileGraph tileGraph, Tile currentTile) {
         super(tileGraph, currentTile);
-        if(drawing == null) {
-            File personDrawable = new File("res/person.png");
-            try {
-                drawing = ImageIO.read(personDrawable).getScaledInstance(currentTile.getWidth() * 6 / 10, currentTile.getHeight() * 6 / 10, Image.SCALE_SMOOTH);
-            } catch (IOException e) {
-                e.printStackTrace();
+        synchronized (Person.class) {
+        	if(drawing == null) {
+                File personDrawable = new File("res/person.png");
+                try {
+                    drawing = ImageIO.read(personDrawable).getScaledInstance(currentTile.getWidth() * 6 / 10, currentTile.getHeight() * 6 / 10, Image.SCALE_SMOOTH);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+		}
+        
         baseColor = Color.BLUE;
 
         moveChance = moveChanceMin + Math.random() * (moveChanceMax - moveChanceMin);
