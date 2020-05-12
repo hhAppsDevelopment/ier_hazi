@@ -8,7 +8,12 @@
 
 /* Plans */
 
-+taskFinished(Premise,Tile) <- .broadcast(corpseRemoved(Premise,Tile)) .abolish(corpse(Premise,Tile)) .abolish(assigned(Premise,Tile)) .abolish(proposal(Premise,Tile)) .abolish(taskFinished(Premise,Tile)).
++corpseBid(Dist,Premise,Tile,Ag) :  .count(corpseBid(_,Premise,Tile,_),4) <- .print("Last bid ",Dist," from", Ag) !assignCorpse(Premise,Tile).
 
-+proposal(Premise,Tile)[source(Src)] : not assigned(Premise,Tile,_) <- .broadcast(tell,task(Premise,Tile,Src)) .percept(assigned(Premise,Tile,Src)).
++corpseBid(Dist,Premise,Tile,Ag) <- .print("Bid ",Dist," from", Ag). 
 
++!assignCorpse(Premise,Tile) <- .findall(option(Dist,Ag),corpseBid(Dist,Premise,Tile,Ag),LD); .min(LD,option(DistCloser,Closer)); .send(Closer,tell,assignedCorpse(Premise,Tile)) .print("Assigned ", Premise, " ",Tile, " to ",Closer," for ",DistCloser).
+
+-!assignCorpse(Premise,Tile) <- .print("Could not assign ", Premise, " ",Tile).
+
++corpseRemoved(Premise,Tile) <- .abolish(corpse(Premise,Tile)) .abolish(corpseRemoved(Premise,Tile)) .abolish(corpseBid(_,Premise,Tile,_)).

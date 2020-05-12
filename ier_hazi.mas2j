@@ -2,7 +2,7 @@ MAS ier_hazi {
 
 	infrastructure: Centralised
 	
-	environment: QuarantineEnvironment("res/map.csv")
+	environment: QuarantineEnvironment("res/map.csv","ier_hazi.mas2j")
 	
 //	executionControl: QuarantineExecutionControl
 

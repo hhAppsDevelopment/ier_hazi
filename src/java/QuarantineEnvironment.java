@@ -9,7 +9,10 @@ import jason.asSyntax.Literal;
 import jason.asSyntax.NumberTerm;
 import jason.asSyntax.Structure;
 import jason.environment.TimeSteppedEnvironment;
+import jason.mas2j.AgentParameters;
+import jason.mas2j.MAS2JProject;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,6 +60,25 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(-1);
+		}
+		
+		try {
+			jason.mas2j.parser.mas2j parser = new jason.mas2j.parser.mas2j(new FileInputStream(args[1]));
+			MAS2JProject project = parser.mas();
+
+			for (AgentParameters ap : project.getAgents()) {
+				String agName = ap.name;
+				for (int cAg = 0; cAg < ap.getNbInstances(); cAg++) {
+					String numberedAg = agName;
+					if (ap.getNbInstances() > 1) {
+						numberedAg += (cAg + 1);
+					}
+					addAgent(numberedAg);
+		         }
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+//			System.exit(-1);
 		}
 		
 		super.init(new String[] { "10" } ); // set step timeout
@@ -116,9 +138,12 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     
     @Override
     public Collection<Literal> getPercepts(String agName) {
-        if (name2ag.get(agName) == null) {
-            updateAgPercept(addAgent(agName));
-        }
+    	synchronized(this) {
+    		if (name2ag.get(agName) == null) {
+                updateAgPercept(addAgent(agName));
+            }
+    	}
+        
         
     	  	
     	return super.getPercepts(agName);
@@ -159,7 +184,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     
     @Override
     protected void stepFinished(int step, long time, boolean timeout) {
-    	logger.info("time: "+time);
+//    	logger.info("time: "+time);
     	if(time<field.getStepTime()) {
     		try {
     			Thread.sleep(field.getStepTime()-time);
@@ -173,9 +198,11 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     @Override
     protected void updateAgsPercept() {
     	updateGlobalKnowledge();
-        for (Agent ag: ag2name.keySet()) {
+		for (Agent ag: ag2name.keySet()) {
             updateAgPercept(ag);
         }
+
+        
     }
     
     protected void updateGlobalKnowledge() {
@@ -191,6 +218,13 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
 		addPercept(agName, lpos);
     	
 		Tile currentTile=ag.getCurrentTile();
+		
+		for(Premise premise: premise2id.keySet()) {
+    		int distToPremise=field.getTileGraph().getDijkstraShortestPath().getPath(currentTile, premise.getRandomTile()).getLength();
+    		Literal ldistToPremise=ASSyntax.createLiteral("distToPremise", ASSyntax.createNumber(premise2id.get(premise)), ASSyntax.createNumber(distToPremise));
+    		addPercept(agName, ldistToPremise);
+    	}
+		
     	// all Tiles of the agent's current premise
     	for(Tile tile: currentTile.getPremise().getTiles()) {
     		boolean interestingTile=false;
@@ -215,6 +249,8 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
         		addPercept(agName, ldistToTile);
     		}
     	}
+    	
+    	
     	
     	
     	addPercept(agName, lstep);
