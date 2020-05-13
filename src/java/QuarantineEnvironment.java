@@ -219,19 +219,24 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     	String agName=ag2name.get(ag);
     	clearPercepts(agName);
     	
+    	//current position of the agent
     	Literal lpos= ASSyntax.createLiteral("pos", ASSyntax.createNumber(premise2id.get(ag.getCurrentTile().getPremise())),ASSyntax.createNumber(ag.getCurrentTile().getPremise().getTiles().indexOf(ag.getCurrentTile())));
 		addPercept(agName, lpos);
     	
 		Tile currentTile=ag.getCurrentTile();
 		
+		//distance to all premises
 		for(Premise premise: premise2id.keySet()) {
     		int distToPremise=field.getTileGraph().getDijkstraShortestPath().getPath(currentTile, premise.getRandomTile()).getLength();
     		Literal ldistToPremise=ASSyntax.createLiteral("distToPremise", ASSyntax.createNumber(premise2id.get(premise)), ASSyntax.createNumber(distToPremise));
     		addPercept(agName, ldistToPremise);
     	}
 		
-    	// all Tiles of the agent's current premise
-    	for(Tile tile: currentTile.getPremise().getTiles()) {
+    	// all Tiles and doors of the agent's current premise
+		List<Tile> tiles = new ArrayList<Tile>();
+		tiles.addAll(currentTile.getPremise().getTiles());
+		tiles.addAll(currentTile.getPremise().getDoors());
+    	for(Tile tile: tiles) {
     		boolean interestingTile=false;
 			int tileID=currentTile.getPremise().getTiles().indexOf(tile);
     		
@@ -255,10 +260,9 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     		}
     	}
     	
+    	//whether the agent has a goal Tile set currently
     	Literal lgoalset = ASSyntax.createLiteral(ag.hasGoal(), "goalSet");
     	addPercept(agName,lgoalset);
-    	
-    	
     	
     	addPercept(agName, lstep);
     }

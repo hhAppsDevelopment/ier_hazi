@@ -14,6 +14,10 @@ public abstract class Premise {
         return tiles;
     }
 
+    public ArrayList<Tile> getDoors() {
+        return doors;
+    }
+    
     public Tile getRandomTile() {
         int i = (int) (Math.random()*tiles.size());
         return tiles.get(i);
