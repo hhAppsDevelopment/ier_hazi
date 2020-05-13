@@ -19,7 +19,7 @@
 +cough(Premise,Person) : cleanness(Old,Premise) <- -cleanness(_,Premise); +cleanness(Old+1,Premise); .abolish(cough(Premise,Person)).
 
 @corpseProcessing[atomic]
-+corpse(Premise,Tile) : cleanness(Old,Premise) <- -cleanness(_,Premise); +cleanness(Old+10,Premise); .abolish(corpse(Premise,Tile)).
++corpse(Premise,Tile) : cleanness(Old,Premise) <- -cleanness(_,Premise); +cleanness(Old+5,Premise); .abolish(corpse(Premise,Tile)).
 
 +step(_) : true <- !cleanCurrent; !gotoMostInfected; !age.
 
