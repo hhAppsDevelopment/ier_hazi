@@ -2,7 +2,6 @@
 
 /* Initial beliefs and rules */
 
-
 //~goalSet.
 
 /* Initial goals */
@@ -32,10 +31,10 @@
 
 //set assigned corpse as goal
 
-+step(_) : assignedCorpse(Premise,Tile) <- !gotoCorpse(Premise,Tile).
++step(_) : assignedCorpse(Premise,Tile) <-  !gotoCorpse(Premise,Tile).
 
 +!gotoCorpse(Premise,Tile) : not goalSet <- setGoal(Premise,Tile) .print("Going to ",Premise,", ",Tile).
 
-+!gotoCorpse(Premise,Tile) : true <-  .print("Can't yet go to ",Premise," ",Tile).
++!gotoCorpse(Premise,Tile) : true <-  /* .print("Can't yet go to ",Premise," ",Tile)*/ true.
 
 +corpseRemoved(Premise,Tile) <- .abolish(corpse(Premise,Tile)) .abolish(corpseRemoved(Premise,Tile)).
