@@ -22,6 +22,8 @@ public class Person extends Occupant {
     private double coughingChance;
     private double recoveryChance;
     private int food;
+    private int id;
+    private static int cntr=0;
     private static final double moveChanceMax = 0.5;
     private static final double goOutChanceMax = 0.05;
     private static final double goInChanceMax = 0.05;
@@ -62,9 +64,14 @@ public class Person extends Occupant {
     private int remainingTime = 0;
 
     private static Image drawing;
+    
+    public int getId() {
+    	return id;
+    }
 
     public Person(TileGraph tileGraph, Tile currentTile) {
         super(tileGraph, currentTile);
+        id=cntr++;
         synchronized (Person.class) {
         	if(drawing == null) {
                 File personDrawable = new File("res/person.png");

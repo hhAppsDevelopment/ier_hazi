@@ -8,6 +8,8 @@
 
 /* Plans */
 
+//bidding related rules
+
 +corpseBid(Dist,Premise,Tile,Ag) :  .count(corpseBid(_,Premise,Tile,_),4) <- .print("Last bid ",Dist," from ", Ag) !assignCorpse(Premise,Tile).
 
 +corpseBid(Dist,Premise,Tile,Ag) <- .print("Bid ",Dist," from ", Ag). 

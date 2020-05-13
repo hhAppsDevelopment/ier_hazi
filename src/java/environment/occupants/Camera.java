@@ -8,10 +8,24 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Camera extends Agent {
     private static Image drawing;
-    @Override
+    
+    private ArrayList<Person> coughs=new ArrayList<Person>();
+    private ArrayList<Occupant> moves=new ArrayList<Occupant>();
+    
+     
+    public ArrayList<Person> getCoughs() {
+		return coughs;
+	}
+
+	public ArrayList<Occupant> getMoves() {
+		return moves;
+	}
+
+	@Override
     public Image getDrawing() {
         return drawing;
     }
@@ -32,10 +46,12 @@ public class Camera extends Agent {
 
     @Override
     protected void notifyMoved(Occupant occupant) {
+    	moves.add(occupant);
     }
 
     @Override
     protected void notifyCoughing(Person person) {
+    	coughs.add(person);
         QuarantineLogger.log("Coughing seen");
     }
 

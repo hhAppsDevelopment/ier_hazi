@@ -9,14 +9,6 @@
 
 /* Plans */
 
-//+step(_) : corpse(Premise,Tile) & pos(Premise,Tile) & task(Premise,Tile)  <- .send(manager,tell,corpseRemoved(Premise,Tile)) clearCorpse.
-//
-//+step(_) : corpse(Premise,Tile) & pos(_,_) & distToTile(Tile,Dist) <-  setGoal(Premise,Tile).
-//
-//+step(_) : corpse(Premise,Tile) & pos(_,_)  & not corpseClaimed(Premise,Tile) <- setGoal(Premise,Tile).
-//
-//+step(_) : corridorID(Corridor) & not pos(Corridor,_) & not (pos(Premise,_) & task(Premise,_)) <- returnToCorridor.
-
 //bidding
 
 +corpse(Premise,Tile) : .count(assignedCorpse(_,_),0) & distToTile(Tile,Dist) & pos(Premise,_) <- .my_name(Me) .send(manager, tell, corpseBid(Dist,Premise,Tile,Me)).

@@ -132,17 +132,17 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     }
     
 
-    @Override
-    protected int requiredStepsForAction(String agName, Structure action) {
-        if (action.getFunctor().equals("setGoal")) {
-            return 1;
-        } else if (action.getFunctor().equals("clearCorpse")) {
-        	return 1;
-        } else if (action.getFunctor().equals("returnToCorridor")) {
-        	return 1;
-        }
-        return super.requiredStepsForAction(agName, action);
-    }
+//    @Override
+//    protected int requiredStepsForAction(String agName, Structure action) {
+//        if (action.getFunctor().equals("setGoal")) {
+//            return 1;
+//        } else if (action.getFunctor().equals("clearCorpse")) {
+//        	return 1;
+//        } else if (action.getFunctor().equals("returnToCorridor")) {
+//        	return 1;
+//        }
+//        return super.requiredStepsForAction(agName, action);
+//    }
     
     @Override
     public Collection<Literal> getPercepts(String agName) {
@@ -254,17 +254,26 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     				addPercept(agName, lcorpse);
     				interestingTile=true;
     			}
-//    			if(oc instanceof Person) {
-//    				Literal lperson=ASSyntax.createLiteral("person", ASSyntax.createNumber(tileID));
-//    				addPercept(agName, lperson);
-//    				interestingTile=true;
-//    			}
+    			if(oc instanceof Person) {
+    				Literal lperson=ASSyntax.createLiteral("person", ASSyntax.createNumber(((Person)oc).getId()), ASSyntax.createNumber(premise2id.get(currentTile.getPremise())), ASSyntax.createNumber(tileID));
+    				addPercept(agName, lperson);
+    				interestingTile=true;
+    			}
     		}
     		
     		if(interestingTile) {
         		int distToTile=field.getTileGraph().getDijkstraShortestPath().getPath(currentTile, tile).getLength();
         		Literal ldistToTile=ASSyntax.createLiteral("distToTile", ASSyntax.createNumber(tileID), ASSyntax.createNumber(distToTile));
         		addPercept(agName, ldistToTile);
+    		}
+    		
+    	}
+    	
+    	if(ag instanceof Camera) {
+    		Camera cam=(Camera) ag;
+    		for(Person p: cam.getCoughs()) {
+    			Literal lcough=ASSyntax.createLiteral("cough", ASSyntax.createNumber(premise2id.get(currentTile.getPremise())), ASSyntax.createNumber(p.getId()));
+        		addPercept(agName, lcough);
     		}
     	}
     	
