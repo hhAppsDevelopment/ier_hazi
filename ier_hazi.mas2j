@@ -8,7 +8,7 @@ MAS ier_hazi {
 
 	agents:
 		corpseremover #4;
-		camera #32;
+		camera #35;
 		manager;
 
 	aslSourcePath:

@@ -126,7 +126,7 @@ public abstract class Occupant {
         }
     }
 
-    protected boolean hasGoal() {
+    public boolean hasGoal() {
         return goal != null;
     }
 

@@ -172,8 +172,13 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
 
     int next = 0;
 	private Tile getNextEmptyRoomTile() {
-		assert (field.getTileGraph().getCabins().size() > next);
-		return field.getTileGraph().getCabins().get(next++).getTiles().get(0);
+		if(field.getTileGraph().getCabins().size() > next) {
+			return field.getTileGraph().getCabins().get(next++).getTiles().get(0);
+		} else if(field.getTileGraph().getSmokingRooms().size() > next-field.getTileGraph().getCabins().size()){
+			return field.getTileGraph().getSmokingRooms().get(next++ - field.getTileGraph().getCabins().size()).getTiles().get(0);
+		} else {
+			return field.getTileGraph().getCorridors().get(0).getTiles().get(0);
+		}
 	}
 
 	@Override
@@ -250,6 +255,8 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     		}
     	}
     	
+    	Literal lgoalset = ASSyntax.createLiteral(ag.hasGoal(), "goalSet");
+    	addPercept(agName,lgoalset);
     	
     	
     	
