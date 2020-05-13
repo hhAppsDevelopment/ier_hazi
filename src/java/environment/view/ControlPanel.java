@@ -3,12 +3,16 @@ package environment.view;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 
+import jason.environment.TimeSteppedEnvironment;
+
 public class ControlPanel extends JPanel {
     private final PlayField playField;
     private JLabel lSlider;
     private JSlider slider;
-    public ControlPanel(PlayField playField) {
+    TimeSteppedEnvironment env;
+    public ControlPanel(PlayField playField, TimeSteppedEnvironment env) {
         this.playField = playField;
+        this.env=env;
         lSlider = new JLabel("Speed: ");
         this.add(lSlider);
 
@@ -16,9 +20,11 @@ public class ControlPanel extends JPanel {
         slider.addChangeListener(this::sliderChanged);
         this.add(slider);
         playField.setStepTime(1000/slider.getValue());
+        env.setTimeout(1000/slider.getValue());
     }
 
     private void sliderChanged(ChangeEvent changeEvent) {
         playField.setStepTime(1000/slider.getValue());
+        env.setTimeout(1000/slider.getValue());
     }
 }

@@ -42,7 +42,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
         
         //initializing MainFrame with path to map
 		try {
-			MainFrame frame = new MainFrame(args[0]);
+			MainFrame frame = new MainFrame(args[0], this);
 			field = frame.getPlayField();
 			int i = 0;
 			for (Premise premise : field.getTileGraph().getCorridors()) {
@@ -103,15 +103,17 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     		toRemove.forEach(occupant -> {ag.getCurrentTile().unregisterOccupant(occupant);});
     	} else if(actId.equals("leaveFood")) {
     		ag.getCurrentTile().getPremise().getTiles().forEach(tile -> tile.getOccupants().forEach(Occupant::resetFood));
+    		ag.getCurrentTile().getPremise().getDoors().forEach(tile -> tile.getOccupants().forEach(Occupant::resetFood));
     	} else if(actId.equals("leaveMedicine")) {
     		ag.getCurrentTile().getPremise().getTiles().forEach(tile -> tile.getOccupants().forEach(Occupant::giveMedicine));
+    		ag.getCurrentTile().getPremise().getDoors().forEach(tile -> tile.getOccupants().forEach(Occupant::giveMedicine));
     	} else if(actId.equals("lockPremise")) {
     		ag.getCurrentTile().getPremise().setLocked(true);
     	} else if(actId.equals("unlockPremise")) {
     		ag.getCurrentTile().getPremise().setLocked(false);
     	} else if(actId.equals("setGoal")) {
     		try {
-				ag.setGoal(id2premise.get((int)((NumberTerm)action.getTerm(0)).solve()).getTiles().get((int)((NumberTerm)action.getTerm(1)).solve()));
+				ag.setGoal(id2premise.get((int)((NumberTerm)action.getTerm(0)).solve()).getTile((int)((NumberTerm)action.getTerm(1)).solve()));
 			} catch (NoValueException e) {
 				e.printStackTrace();
 			}
@@ -220,7 +222,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     	clearPercepts(agName);
     	
     	//current position of the agent
-    	Literal lpos= ASSyntax.createLiteral("pos", ASSyntax.createNumber(premise2id.get(ag.getCurrentTile().getPremise())),ASSyntax.createNumber(ag.getCurrentTile().getPremise().getTiles().indexOf(ag.getCurrentTile())));
+    	Literal lpos= ASSyntax.createLiteral("pos", ASSyntax.createNumber(premise2id.get(ag.getCurrentTile().getPremise())),ASSyntax.createNumber(ag.getCurrentTile().getPremise().indexOf(ag.getCurrentTile())));
 		addPercept(agName, lpos);
     	
 		Tile currentTile=ag.getCurrentTile();
@@ -238,7 +240,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
 		tiles.addAll(currentTile.getPremise().getDoors());
     	for(Tile tile: tiles) {
     		boolean interestingTile=false;
-			int tileID=currentTile.getPremise().getTiles().indexOf(tile);
+			int tileID=currentTile.getPremise().indexOf(tile);
     		
     		for(Occupant oc: tile.getOccupants()) {
     			if(oc.isDead()) {

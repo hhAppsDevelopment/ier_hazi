@@ -3,6 +3,7 @@ package environment.view;
 import environment.model.Premise;
 import environment.model.TileGraph;
 import environment.occupants.*;
+import jason.environment.TimeSteppedEnvironment;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +18,7 @@ public class PlayField extends JPanel {
     private ArrayList<Person> people;
 
     private TileGraph tileGraph;
-    
+        
     private int stepTime=100;
     
     public void setStepTime(int millis) {

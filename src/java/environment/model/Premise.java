@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableList;
+
 public abstract class Premise {
 
     public ArrayList<Tile> getTiles() {
@@ -18,6 +20,20 @@ public abstract class Premise {
         return doors;
     }
     
+    public int indexOf(Tile tile) {
+    	int index=tiles.indexOf(tile);
+    	if(index >=0) return index;
+    	return tiles.size()+doors.indexOf(tile);
+    }
+    
+    public Tile getTile(int index) {
+    	if(index<tiles.size()) {
+    		return tiles.get(index);
+    	} else {
+    		return doors.get(index-tiles.size());
+    	}
+    }
+        
     public Tile getRandomTile() {
         int i = (int) (Math.random()*tiles.size());
         return tiles.get(i);
