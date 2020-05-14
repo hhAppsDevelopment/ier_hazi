@@ -14,7 +14,7 @@ corridorID(0).
 
 +canOpen(Premise) : lockedCorridor & corridorId(Premise) <- for(distToPremise(Premise,_)){
 	if(not locked(Premise)){ unlockPremise(Premise);};
-}.
+}; -canOpen(Premise).
 
 +canOpen(Premise) : locked(Premise) <- unlockPremise(Premise); -locked(Premise); -canOpen(Premise).
 
