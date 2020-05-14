@@ -13,38 +13,27 @@ import java.io.IOException;
 import java.util.List;
 
 public class Person extends Occupant {
-    private double movingModifier = 1;
-    private double moveChance;
-    private double goOutChance;
-    private double goInChance;
-    private double goSmokeChance;
-    private double redLampModifier;
-    private double coughingChance;
+    public static double moveChance = 0.1;
+    public static double goOutChance = 0.1;
+    public static double goInChance = 0.1;
+    public static double goSmokeChance = 0.1;
+    public static double redLampModifier = 0.05;
+    public static double coughingChance = 0.5;
+    public static int asymptomaticMin = 50;
+    public static int asymptomaticMax = 100;
+    public static int symptomaticMin = 50;
+    public static int symptomaticMax = 100;
+
+    private static double baseRecoveryChance = 0.5;
+    private static int foodMax = 100;
+
+
     private double recoveryChance;
     private int food;
+    private double movingModifier = 1;
+
     private int id;
     private static int cntr=0;
-    private static final double moveChanceMax = 0.5;
-    private static final double goOutChanceMax = 0.05;
-    private static final double goInChanceMax = 0.05;
-    private static final double goSmokeChanceMax = 0.1;
-    private static final double redLampModifierMax = 0.1;
-    private static final double coughingChanceMax = 0.25;
-    private static final double recoveryChanceMax = 0.2;
-    private static final double recoveryChanceMin = 0.1;
-    private static final double coughingChanceMin = 0.1;
-    private static final double moveChanceMin = 0.4;
-    private static final double goOutChanceMin = 0.01;
-    private static final double goInChanceMin = 0.01;
-    private static final double goSmokeChanceMin = 0.05;
-    private static final double redLampModifierMin = 0.01;
-    private static final double smokerChance = 0.25;
-    private static final int asymptomaticMin = 100;
-    private static final int asymptomaticMax = 150;
-    private static final int symptomaticMin = 50;
-    private static final int symptomaticMax = 100;
-    private static final int foodMin = 25;
-    private static final int foodMax = 100;
 
     public void setContagious() {
         contagious = true;
@@ -82,17 +71,9 @@ public class Person extends Occupant {
                 }
             }
 		}
-        
-        baseColor = Color.BLUE;
-
-        moveChance = moveChanceMin + Math.random() * (moveChanceMax - moveChanceMin);
-        goOutChance = goOutChanceMin + Math.random() * (goOutChanceMax - goOutChanceMin);
-        goInChance = goInChanceMin + Math.random() * (goInChanceMax - goInChanceMin);
-        goSmokeChance = (Math.random() <= smokerChance) ? goSmokeChanceMin + Math.random() * (goSmokeChanceMax - goSmokeChanceMin) : 0;
-        redLampModifier = redLampModifierMin + Math.random() * (redLampModifierMax - redLampModifierMin);
-        coughingChance = coughingChanceMin + Math.random() * (coughingChanceMax - coughingChanceMin);
-        recoveryChance = recoveryChanceMin + Math.random() * (recoveryChanceMax - recoveryChanceMin);
-        food = (int) (foodMin + Math.random() * (foodMax - foodMin));
+        baseColor = new Color(0, 230, 255);
+        recoveryChance = baseRecoveryChance;
+        food = (int) (Math.random() * (foodMax));
 
     }
 
@@ -110,7 +91,7 @@ public class Person extends Occupant {
     }
 
     public void resetFood() {
-        food = (int) (foodMin + Math.random() * (foodMax - foodMin));
+        food = foodMax;
     }
 
     public void giveMedicine() {
@@ -145,8 +126,10 @@ public class Person extends Occupant {
                         state = ILLNESS_STATE.HEALTHY;
                         remainingTime = 0;
                         contagious = false;
-                        baseColor = Color.BLUE;
+                        baseColor = new Color(0, 230, 255);
                         recovered();
+                        recoveryChance = baseRecoveryChance;
+                        movingModifier = 1;
                     }
                     else {
                         state = ILLNESS_STATE.DEAD;
@@ -174,7 +157,7 @@ public class Person extends Occupant {
                     }
                 }
             } else {
-                baseColor = Color.BLUE;
+                baseColor = new Color(0, 230, 255);
             }
         }
         if(!hasGoal()) {

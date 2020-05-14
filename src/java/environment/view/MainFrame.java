@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class MainFrame extends JFrame {
     private static final int width = 1600;
-    private static final int height = 900;
+    private static final int height = 1000;
     private static final String title = "Automatic Quarantine System Simulation";
     private PlayField playField;
 
