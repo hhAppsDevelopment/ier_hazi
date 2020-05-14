@@ -4,8 +4,6 @@ MAS ier_hazi {
 	
 	environment: QuarantineEnvironment("res/map.csv","ier_hazi.mas2j")
 	
-//	executionControl: QuarantineExecutionControl
-
 	agents:
 		nurse;
 		cleaner;
