@@ -116,9 +116,17 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     		}
 			 
     	} else if(actId.equals("lockPremise")) {
-    		ag.getCurrentTile().getPremise().setLocked(true);
+    		try {
+				id2premise.get((int)((NumberTerm)action.getTerm(0)).solve()).setLocked(true);
+			} catch (NoValueException e) {
+				e.printStackTrace();
+			}
     	} else if(actId.equals("unlockPremise")) {
-    		ag.getCurrentTile().getPremise().setLocked(false);
+    		try {
+				id2premise.get((int)((NumberTerm)action.getTerm(0)).solve()).setLocked(false);
+			} catch (NoValueException e) {
+				e.printStackTrace();
+			}
     	} else if(actId.equals("setGoal")) {
     		try {
 				ag.setGoal(id2premise.get((int)((NumberTerm)action.getTerm(0)).solve()).getTile((int)((NumberTerm)action.getTerm(1)).solve()));

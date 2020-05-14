@@ -9,8 +9,8 @@
 
 +step(_) : corpse(Premise,Tile) & pos(Premise,_)  <- .broadcast(tell,corpse(Premise,Tile)).
 
-+cough(Premise,Person) <- .abolish(cough(Premise,Person)) .send(cleaner,tell,cough(Premise,Person)) .send(nurse,tell,cough(Premise,Person)).
++cough(Premise,Person) <- .abolish(cough(Premise,Person)) .send(cleaner,tell,cough(Premise,Person)) .send(manager,tell,cough(Premise,Person)) .send(nurse,tell,cough(Premise,Person)).
 
-+person(Id,Premise) <- .abolish(person(Id,Premise)) .send(nurse,tell,person(Id,Premise)).
++person(Id,Premise) <- .abolish(person(Id,Premise)) .send(nurse,tell,person(Id,Premise)) .send(manager,tell,person(Premise)).
 
 +corpseRemoved(Premise,Tile) <- .abolish(corpse(Premise,Tile)) .abolish(corpseRemoved(Premise,Tile)).

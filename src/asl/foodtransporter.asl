@@ -1,6 +1,6 @@
 // Agent foodtransporter in project ier_hazi
 
-premiseToVisit(0).
+premiseToVisit(math.round(math.random(34))).
 
 maxPremiseID(ID) :- .findall(Premise,distToPremise(Premise,_),L) & .max(L,ID).
 

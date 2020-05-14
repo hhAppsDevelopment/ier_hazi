@@ -4,6 +4,12 @@
 
 //bidding related rules
 
++cough(Premise,_) <- lockPremise(Premise); -cough(Premise,_); +locked(Premise).
+
++corpse(Premise,_) <- lockPremise(Premise); +locked(Premise).
+
++canOpen(Premise) : locked(Premise) <- unlockPremise(Premise); -locked(Premise); -canOpen(Premise).
+
 +corpseBid(Dist,Premise,Tile,Ag) :  .count(corpseBid(_,Premise,Tile,_),4) <- .print("Last bid ",Dist," from ", Ag) !assignCorpse(Premise,Tile).
 
 +corpseBid(Dist,Premise,Tile,Ag) <- .print("Bid ",Dist," from ", Ag). 

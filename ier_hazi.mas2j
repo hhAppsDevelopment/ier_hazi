@@ -9,7 +9,7 @@ MAS ier_hazi {
 	agents:
 		nurse;
 		cleaner;
-		foodtransporter;
+		foodtransporter #3;
 		corpseremover #4;
 		camera #35;
 		manager;
