@@ -107,12 +107,10 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     	} else if(actId.equals("leaveMedicine")) {
     		if(ag instanceof Nurse) {
     			if(((Nurse) ag).getMedicineCnt()>0) {
-    				logger.info(agName+" medicine");
     				((Nurse) ag).useMedicine();
         			ag.getCurrentTile().getPremise().getTiles().forEach(tile -> tile.getOccupants().forEach(Occupant::giveMedicine));
             		ag.getCurrentTile().getPremise().getDoors().forEach(tile -> tile.getOccupants().forEach(Occupant::giveMedicine));
     			}
-    			
     		}
 			 
     	} else if(actId.equals("lockPremise")) {
@@ -138,7 +136,6 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     	} else if(actId.equals("gotoPremise")) {
     		try {
 				ag.setGoal(id2premise.get((int)((NumberTerm)action.getTerm(0)).solve()));
-				 logger.info(agName+" going to premise "+(int)((NumberTerm)action.getTerm(0)).solve());
 			} catch (NoValueException e) {
 				e.printStackTrace();
 			}
@@ -281,7 +278,6 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     	if(ag instanceof Nurse) {
     		if(getStep()%30==0 && ((Nurse)ag).getMedicineCnt()<3) {
     			((Nurse)ag).addMedicine();
-    			logger.info("gave med "+((Nurse)ag).getMedicineCnt());
     		}
     		for(int i=0; i<((Nurse)ag).getMedicineCnt();i++) {
     			Literal lmed=ASSyntax.createLiteral("medicine", ASSyntax.createNumber(i));

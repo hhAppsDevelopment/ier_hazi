@@ -25,7 +25,7 @@
 
 +step(_) : assignedCorpse(Premise,Tile) <-  !gotoCorpse(Premise,Tile).
 
-+!gotoCorpse(Premise,Tile) : not goalSet <- setGoal(Premise,Tile) .print("Going to ",Premise,", ",Tile).
++!gotoCorpse(Premise,Tile) : not goalSet <- setGoal(Premise,Tile).
 
 +!gotoCorpse(Premise,Tile) : true <-  /* .print("Can't yet go to ",Premise," ",Tile)*/ true.
 
