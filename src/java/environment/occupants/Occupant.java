@@ -1,5 +1,6 @@
 package environment.occupants;
 
+import environment.model.Premise;
 import environment.model.TileGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
@@ -14,8 +15,8 @@ import java.util.function.Predicate;
 public abstract class Occupant {
     protected boolean contagious = false;
     private double contagionChance = 0.1;
-
-    protected void recovered() {
+    
+        protected void recovered() {
         contagionChance *= 0.5;
     }
 
@@ -48,6 +49,7 @@ public abstract class Occupant {
     }
 
     private Tile goal;
+    private boolean goalIsPremise;
     private Tile next;
     private List<Tile> pathToGoal;
     private int remaining = 0;
@@ -86,7 +88,7 @@ public abstract class Occupant {
         if (remaining == 1) {
             moveSelf(next);
             pathToGoal.remove(currentTile);
-            if (pathToGoal.size() == 0) {
+            if (pathToGoal.size() == 0 || goalIsPremise && currentTile.getPremise().equals(goal.getPremise())) {
                 this.goal = null;
                 next = null;
                 pathToGoal = null;
@@ -99,7 +101,13 @@ public abstract class Occupant {
     }
 
     public void setGoal(Tile goal) {
+    	goalIsPremise=false;
         setGoal(goal, tiles -> true);
+    }
+    
+    public void setGoal(Premise goal) {
+    	goalIsPremise=true;
+        setGoal(goal.getRandomTile(), tiles -> true);
     }
 
     protected void setGoal(Tile goal, Predicate<List<Tile>> predicate) {

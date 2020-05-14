@@ -29,8 +29,9 @@
 				+cleanness(Old*0.9,Premise);
 			}.
 
+
 @cleaning[atomic]			
-+!cleanCurrent : pos(Premise,_) <- cleanPremise; -cleanness(_,Premise); +cleanness(0,Premise).
++!cleanCurrent : pos(Premise,Tile)  <-  cleanPremise; -cleanness(_,Premise); +cleanness(0,Premise).
 
 +!gotoMostInfected : not goalSet & .findall(cleanness(X,Y),cleanness(X,Y),L) & .max(L,cleanness(Biggest,Premise)) & Biggest > 0 <- .print(Premise) ; gotoPremise(Premise).
 

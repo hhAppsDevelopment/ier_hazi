@@ -119,7 +119,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
 			}
     	} else if(actId.equals("gotoPremise")) {
     		try {
-				ag.setGoal(id2premise.get((int)((NumberTerm)action.getTerm(0)).solve()).getRandomTile());
+				ag.setGoal(id2premise.get((int)((NumberTerm)action.getTerm(0)).solve()));
 			} catch (NoValueException e) {
 				e.printStackTrace();
 			}
