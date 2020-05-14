@@ -1,14 +1,24 @@
 // Agent manager in project ier_hazi
 
+corridorID(0).
+
 /* Plans */
 
-//bidding related rules
++cough(Premise,_) : corridorID(Premise) <- -cough(Premise,_); lockCorridor; +lockedCorridor.
+
++corpse(Premise,_) : corridorID(Premise) <- lockCorridor; +lockedCorridor.
 
 +cough(Premise,_) <- lockPremise(Premise); -cough(Premise,_); +locked(Premise).
 
 +corpse(Premise,_) <- lockPremise(Premise); +locked(Premise).
 
++canOpen(Premise) : lockedCorridor & corridorId(Premise) <- for(distToPremise(Premise,_)){
+	if(not locked(Premise)){ unlockPremise(Premise);};
+}.
+
 +canOpen(Premise) : locked(Premise) <- unlockPremise(Premise); -locked(Premise); -canOpen(Premise).
+
+//bidding related rules
 
 +corpseBid(Dist,Premise,Tile,Ag) :  .count(corpseBid(_,Premise,Tile,_),4) <- .print("Last bid ",Dist," from ", Ag) !assignCorpse(Premise,Tile).
 

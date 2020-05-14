@@ -121,6 +121,8 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
 			} catch (NoValueException e) {
 				e.printStackTrace();
 			}
+    	}else if(actId.equals("lockCorridor")) {
+    		premise2id.keySet().forEach(premise -> premise.setLocked(true));
     	} else if(actId.equals("unlockPremise")) {
     		try {
 				id2premise.get((int)((NumberTerm)action.getTerm(0)).solve()).setLocked(false);
