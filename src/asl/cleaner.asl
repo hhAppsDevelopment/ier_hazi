@@ -26,7 +26,7 @@
 
 
 @cleaning[atomic]			
-+!cleanCurrent : pos(Premise,Tile)  <-  cleanPremise; -cleanness(_,Premise); +cleanness(0,Premise) if(not corpse(Premise,_) & not person(_,Premise)){ .send(manager,tell,canOpen(Premise))}.
++!cleanCurrent : pos(Premise,Tile)  <-  cleanPremise; -cleanness(_,Premise); if(not corpse(Premise,_) & not person(_,Premise)){ .send(manager,tell,canOpen(Premise)); +cleanness(0,Premise)} else {+cleanness(5,Premise)}.
 
 +!gotoMostInfected : not goalSet & .findall(cleanness(X,Y),cleanness(X,Y),L) & .max(L,cleanness(Biggest,Premise)) & Biggest > 0 <- /* .print(Premise) ;*/ gotoPremise(Premise).
 
