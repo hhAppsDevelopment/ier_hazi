@@ -1,10 +1,5 @@
 // Agent cleaner in project ier_hazi
 
-/* Initial beliefs and rules */
-
-
-
-
 /* Initial goals */
 
 !start.
@@ -33,6 +28,6 @@
 @cleaning[atomic]			
 +!cleanCurrent : pos(Premise,Tile)  <-  cleanPremise; -cleanness(_,Premise); +cleanness(0,Premise).
 
-+!gotoMostInfected : not goalSet & .findall(cleanness(X,Y),cleanness(X,Y),L) & .max(L,cleanness(Biggest,Premise)) & Biggest > 0 <- .print(Premise) ; gotoPremise(Premise).
++!gotoMostInfected : not goalSet & .findall(cleanness(X,Y),cleanness(X,Y),L) & .max(L,cleanness(Biggest,Premise)) & Biggest > 0 <- /* .print(Premise) ;*/ gotoPremise(Premise).
 
 +!gotoMostInfected <- true.

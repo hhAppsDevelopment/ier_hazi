@@ -1,11 +1,5 @@
 // Agent manager in project ier_hazi
 
-/* Initial beliefs and rules */
-
-/* Initial goals */
-
-
-
 /* Plans */
 
 //bidding related rules

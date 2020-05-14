@@ -13,6 +13,3 @@ maxPremiseID(ID) :- .findall(Premise,distToPremise(Premise,_),L) & .max(L,ID).
 
 +step(_) : not goalSet & premiseToVisit(X) <- gotoPremise(X).
 
-
-
-//+step(_) : true <- leaveFood.

@@ -7,6 +7,7 @@ MAS ier_hazi {
 //	executionControl: QuarantineExecutionControl
 
 	agents:
+		nurse;
 		cleaner;
 		foodtransporter;
 		corpseremover #4;

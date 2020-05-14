@@ -105,8 +105,16 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     		ag.getCurrentTile().getPremise().getTiles().forEach(tile -> tile.getOccupants().forEach(Occupant::resetFood));
     		ag.getCurrentTile().getPremise().getDoors().forEach(tile -> tile.getOccupants().forEach(Occupant::resetFood));
     	} else if(actId.equals("leaveMedicine")) {
-    		ag.getCurrentTile().getPremise().getTiles().forEach(tile -> tile.getOccupants().forEach(Occupant::giveMedicine));
-    		ag.getCurrentTile().getPremise().getDoors().forEach(tile -> tile.getOccupants().forEach(Occupant::giveMedicine));
+    		if(ag instanceof Nurse) {
+    			if(((Nurse) ag).getMedicineCnt()>0) {
+    				logger.info(agName+" medicine");
+    				((Nurse) ag).useMedicine();
+        			ag.getCurrentTile().getPremise().getTiles().forEach(tile -> tile.getOccupants().forEach(Occupant::giveMedicine));
+            		ag.getCurrentTile().getPremise().getDoors().forEach(tile -> tile.getOccupants().forEach(Occupant::giveMedicine));
+    			}
+    			
+    		}
+			 
     	} else if(actId.equals("lockPremise")) {
     		ag.getCurrentTile().getPremise().setLocked(true);
     	} else if(actId.equals("unlockPremise")) {
@@ -120,6 +128,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     	} else if(actId.equals("gotoPremise")) {
     		try {
 				ag.setGoal(id2premise.get((int)((NumberTerm)action.getTerm(0)).solve()));
+				 logger.info(agName+" going to premise "+(int)((NumberTerm)action.getTerm(0)).solve());
 			} catch (NoValueException e) {
 				e.printStackTrace();
 			}
@@ -130,20 +139,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     	return true;
     	
     }
-    
-
-//    @Override
-//    protected int requiredStepsForAction(String agName, Structure action) {
-//        if (action.getFunctor().equals("setGoal")) {
-//            return 1;
-//        } else if (action.getFunctor().equals("clearCorpse")) {
-//        	return 1;
-//        } else if (action.getFunctor().equals("returnToCorridor")) {
-//        	return 1;
-//        }
-//        return super.requiredStepsForAction(agName, action);
-//    }
-    
+        
     @Override
     public Collection<Literal> getPercepts(String agName) {
     	synchronized(this) {
@@ -151,8 +147,6 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
                 updateAgPercept(addAgent(agName));
             }
     	}
-        
-        
     	  	
     	return super.getPercepts(agName);
     }
@@ -169,6 +163,8 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
         	newAgent = new FoodTransporter(field, field.getTileGraph().getCorridors().get(0).getRandomTile());
         } else if(agName.equals("manager")) {
         	newAgent = new Manager(field, field.getTileGraph().getCorridors().get(0).getRandomTile());
+        } else if(agName.equals("nurse")) {
+        	newAgent = new Nurse(field, field.getTileGraph().getCorridors().get(0).getRandomTile());
         }
         
         ag2name.put(newAgent, agName);
@@ -191,13 +187,11 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
 
 	@Override
     protected void stepStarted(int step) {
-        //logger.info("start step "+step);
         lstep = ASSyntax.createLiteral("step", ASSyntax.createNumber(step+1));
     }
     
     @Override
     protected void stepFinished(int step, long time, boolean timeout) {
-//    	logger.info("time: "+time);
     	if(time<field.getStepTime()) {
     		try {
     			Thread.sleep(field.getStepTime()-time);
@@ -210,22 +204,17 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     
     @Override
     protected void updateAgsPercept() {
-    	updateGlobalKnowledge();
 		for (Agent ag: ag2name.keySet()) {
             updateAgPercept(ag);
         }
 
-        
     }
     
-    protected void updateGlobalKnowledge() {
-    	Literal lcorridor=ASSyntax.createLiteral("corridorID", ASSyntax.createNumber(premise2id.get(field.getTileGraph().getCorridors().get(0))));
-    	addPercept(lcorridor);
-    }
     
     protected void updateAgPercept(Agent ag) {
     	String agName=ag2name.get(ag);
     	clearPercepts(agName);
+    	
     	
     	//current position of the agent
     	Literal lpos= ASSyntax.createLiteral("pos", ASSyntax.createNumber(premise2id.get(ag.getCurrentTile().getPremise())),ASSyntax.createNumber(ag.getCurrentTile().getPremise().indexOf(ag.getCurrentTile())));
@@ -255,7 +244,7 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     				interestingTile=true;
     			}
     			if(oc instanceof Person) {
-    				Literal lperson=ASSyntax.createLiteral("person", ASSyntax.createNumber(((Person)oc).getId()), ASSyntax.createNumber(premise2id.get(currentTile.getPremise())), ASSyntax.createNumber(tileID));
+    				Literal lperson=ASSyntax.createLiteral("person", ASSyntax.createNumber(((Person)oc).getId()), ASSyntax.createNumber(premise2id.get(currentTile.getPremise())));
     				addPercept(agName, lperson);
     				interestingTile=true;
     			}
@@ -269,12 +258,26 @@ public class QuarantineEnvironment extends TimeSteppedEnvironment{
     		
     	}
     	
+    	//cameras can hear coughs
     	if(ag instanceof Camera) {
     		Camera cam=(Camera) ag;
     		for(Person p: cam.getCoughs()) {
     			Literal lcough=ASSyntax.createLiteral("cough", ASSyntax.createNumber(premise2id.get(currentTile.getPremise())), ASSyntax.createNumber(p.getId()));
         		addPercept(agName, lcough);
     		}
+    	}
+    	
+    	//nurse gets medicine every 30 steps
+    	if(ag instanceof Nurse) {
+    		if(getStep()%30==0 && ((Nurse)ag).getMedicineCnt()<3) {
+    			((Nurse)ag).addMedicine();
+    			logger.info("gave med "+((Nurse)ag).getMedicineCnt());
+    		}
+    		for(int i=0; i<((Nurse)ag).getMedicineCnt();i++) {
+    			Literal lmed=ASSyntax.createLiteral("medicine", ASSyntax.createNumber(i));
+        		addPercept(agName, lmed);
+    		}
+    		
     	}
     	
     	//whether the agent has a goal Tile set currently
