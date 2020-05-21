@@ -13,11 +13,11 @@ import java.io.IOException;
 import java.util.List;
 
 public class Person extends Occupant {
-    public static double moveChance = 0.1;
-    public static double goOutChance = 0.1;
-    public static double goInChance = 0.1;
+    public static double moveChance = 0.3;
+    public static double goOutChance = 0.01;
+    public static double goInChance = 0.5;
     public static double goSmokeChance = 0.1;
-    public static double redLampModifier = 0.05;
+    public static double redLampModifier = 0.01;
     public static double coughingChance = 0.5;
     public static int asymptomaticMin = 50;
     public static int asymptomaticMax = 100;
